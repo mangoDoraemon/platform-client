@@ -19,21 +19,20 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-
-  if (hasToken) {
+  debugger
+  console.log("有没有"+hasToken)
+  if (hasToken && hasToken !="undefined") {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: '/' })
-      NProgress.done()
     } else {
       const hasGetUserInfo = store.getters.name
-      if (hasGetUserInfo) {
+      console.log("我到这里了")
+      console.log(hasGetUserInfo)
+      if (hasGetUserInfo && hasGetUserInfo !="undefined") {
         next()
       } else {
         try {
-          // get user info
-          await store.dispatch('user/getInfo')
-
           next()
         } catch (error) {
           // remove token and go to login page to re-login
@@ -46,7 +45,7 @@ router.beforeEach(async(to, from, next) => {
     }
   } else {
     /* has no token*/
-
+    console.log("没有token")
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
       next()
