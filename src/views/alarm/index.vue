@@ -6,7 +6,7 @@
           v-model="datatime"
           type="date"
           placeholder="选择日期" size="small"
-          value-format="yyyy-MM-dd HH:mm:ss">
+          value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -21,36 +21,36 @@
     <el-table
       :data="tableData"
       style="width: 100%"
-
+      v-loading="loading"
     >
       <el-table-column
-        prop="id"
+        prop="type"
         label="告警类型"
         width="200"
         align="center"
       >
       </el-table-column>
       <el-table-column
-        prop="alarmId"
-        label="告警ID"
+        prop="count"
+        label="总条数"
         width="200"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="uploadTime"
-        label="变更时间"
+        prop="success"
+        label="已上报"
         width="200"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="type"
-        label="变更类型"
+        prop="fail"
+        label="未上报"
         width="200"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="status"
-        label="上报状态"
+
+        label="未上报原因"
         width="240"
         align="center">
       </el-table-column>
@@ -77,16 +77,17 @@
         dateRange:'',
         datatime:'',
         tableData: [{
-          type: '',
-          alarmid: '',
-          uploadtime: '',
-          status: '',
+        type: '',
+        count: '',
+        success: '',
+        fail: '',
         }],
         queryParams: {
           pageNum: 1,
           pageSize: 10,
+          uploadTime:''
         },
-        tableData:[],
+
         total:0
       }
     },
@@ -95,40 +96,40 @@
     },
     methods: {
       onSubmit() {
-        this.queryParams.pageNum = 1;
         let that=this;
-        var uploadtime=that.datatime;
-        getListByTime(uploadtime).then(
-          response => {
-            that.tableData = response.data;
-            that.loading = false;
-          }
-        );;
-        console.log(this.datatime);
+        that.queryParams.uploadTime=that.datatime;
+        that.getList1();
+        console.log(that.queryParams.uploadTime);
       },
       /**
        * 查询告警列表
        */
-      /*getList1(){
-        this.loading = true;
-        debugger
-        getList(this.addDateRange(this.queryParams, this.dateRange)).then((response)=>{
-          debugger
-          this.tableData = response.rows;
-          this.total = response.total;
-          this.loading = false;
-        })
-      },*/
       getList1() {
         this.loading = true;
         getList(this.addDateRange(this.queryParams, this.dateRange)).then((response) => {
           this.tableData = response.rows;
           this.total = response.total;
+          this.getType();
           this.loading = false;
         })
-
       },
-
+      /**
+       * 解析类型
+       */
+        getType(){
+          let that=this;
+          var num=that.tableData.length;
+          for(var i=0;i<num;i++){
+            if((that.tableData[i].type)=='add'){
+              that.tableData[i].type='告警'
+            }else {
+              that.tableData[i].type='消除告警'
+            }
+          }
+      },
+      /**
+       *
+       */
     }
   }
 </script>
