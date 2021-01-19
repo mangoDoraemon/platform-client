@@ -26,32 +26,26 @@
       <el-table-column
         prop="type"
         label="告警类型"
-        width="200"
         align="center"
       >
       </el-table-column>
       <el-table-column
         prop="count"
         label="总条数"
-        width="200"
         align="center">
       </el-table-column>
       <el-table-column
         prop="success"
         label="已上报"
-        width="200"
         align="center">
       </el-table-column>
       <el-table-column
         prop="fail"
         label="未上报"
-        width="200"
         align="center">
       </el-table-column>
       <el-table-column
-
         label="未上报原因"
-        width="240"
         align="center">
       </el-table-column>
 
@@ -75,7 +69,7 @@
       return {
         loading:false,
         dateRange:'',
-        datatime:'',
+        datatime:new Date().toLocaleDateString(),
         tableData: [{
         type: '',
         count: '',
@@ -106,7 +100,10 @@
        */
       getList1() {
         this.loading = true;
-        getList(this.addDateRange(this.queryParams, this.dateRange)).then((response) => {
+
+        var time=this.parseTime(this.datatime);
+        this.queryParams.uploadTime=this.parseTime(time).substring(0, (time).indexOf(" "));
+        getList(this.addDateRange(this.queryParams,this.dateRange)).then((response) => {
           this.tableData = response.rows;
           this.total = response.total;
           this.getType();
@@ -127,9 +124,8 @@
             }
           }
       },
-      /**
-       *
-       */
+
+
     }
   }
 </script>

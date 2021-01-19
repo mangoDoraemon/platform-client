@@ -21,43 +21,36 @@
     <el-table-column
       prop="date"
       label=""
-      width="130"
       align="center">
     </el-table-column>
     <el-table-column
       prop="date"
       label="集团上报情况"
-      width="130"
       align="center">
     </el-table-column>
     <el-table-column
       prop="date"
       label="总批次"
-      width="130"
       align="center">
     </el-table-column>
     <el-table-column
       prop="date"
       label="上报成功批次"
-      width="130"
       align="center">
     </el-table-column>
     <el-table-column
       prop="date"
       label="上报失败批次"
-      width="130"
       align="center">
     </el-table-column>
     <el-table-column
       prop="date"
       label="未上报批次"
-      width="130"
       align="center">
     </el-table-column>
     <el-table-column
       prop="date"
       label="上报失败/未上报原因"
-      width="200"
       align="center">
     </el-table-column>
   </el-table>
@@ -65,21 +58,38 @@
 </template>
 
 <script>
+  import {getList} from "@/api/alarm/batch"
     export default {
       name: "today",
       data(){
           return{
+            loading:false,
             datatime:'',
             formInline: {
               user: '',
               region: ''
             },
             tableData:[],
+            queryParams: {
+              pageNum: 1,
+              pageSize: 10,
+            },
+            batchnum:[]
           }
+      },
+      created(){
+          this.getList1();
       },
       methods: {
         onSubmit() {
           console.log('submit!');
+        },
+        getList1(){
+          getList(this.datatime).then((response) => {
+            this.batchnum = response.data;
+            console.log("this.batchnum)"+this.batchnum)
+            this.loading = false;
+          })
         },
       }
     }

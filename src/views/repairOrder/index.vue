@@ -33,37 +33,31 @@
       <el-table-column
         prop="name"
         label="操作类型"
-        width="130"
         align="center">
       </el-table-column>
       <el-table-column
         prop="amount1"
         label="工单总量"
-        width="130"
         align="center">
       </el-table-column>
       <el-table-column
         prop="amount2"
         label="成功数"
-        width="130"
         align="center">
       </el-table-column>
       <el-table-column
         prop="amount3"
         label="失败数"
-        width="130"
         align="center">
       </el-table-column>
       <el-table-column
         prop="amount3"
         label="未上报"
-        width="130"
         align="center">
       </el-table-column>
       <el-table-column
         prop="amount3"
         label="失败原因"
-        width="200"
         align="center">
       </el-table-column>
 
@@ -81,20 +75,17 @@
       <el-table-column
         prop="id"
         label="工单类型"
-        width="340"
         align="center"
       >
       </el-table-column>
       <el-table-column
         prop="name"
         label="工单数量"
-        width="340"
         align="center">
       </el-table-column>
       <el-table-column
         prop="amount1"
         label="及时率"
-        width="340"
         align="center">
       </el-table-column>
 

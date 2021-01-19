@@ -13,7 +13,7 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 import Pagination from "@/components/Pagination";
-import {addDateRange} from '@/utils/alarm'
+import {addDateRange,parseTime} from '@/utils/alarm';
 
 
 // set ElementUI lang to EN
@@ -24,6 +24,7 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 Vue.prototype.addDateRange = addDateRange
+Vue.prototype.parseTime = parseTime
 new Vue({
   el: '#app',
   router,
