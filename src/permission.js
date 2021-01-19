@@ -19,7 +19,7 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-  debugger
+  /*debugger*/
   console.log("有没有"+hasToken)
   if (hasToken && hasToken !="undefined") {
     if (to.path === '/login') {

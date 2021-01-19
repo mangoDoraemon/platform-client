@@ -10,18 +10,20 @@ import '@/styles/ruoyi.scss' // ruoyi css
 import App from './App'
 import store from './store'
 import router from './router'
-
 import '@/icons' // icon
 import '@/permission' // permission control
+import Pagination from "@/components/Pagination";
+import {addDateRange} from '@/utils/alarm'
 
 
 // set ElementUI lang to EN
-
+// 全局组件挂载
+Vue.component('Pagination', Pagination)
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
-
+Vue.prototype.addDateRange = addDateRange
 new Vue({
   el: '#app',
   router,

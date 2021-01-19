@@ -60,8 +60,8 @@ export default {
   data() {
     return {
       loginForm: {
-        userName: 'admin',
-        passWord: 'admin'
+        userName: '',
+        passWord: ''
       },
       loading: false,
       passwordType: 'password',

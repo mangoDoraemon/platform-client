@@ -1,11 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true"  class="demo-form-inline">
+    <el-form :inline="true"  class="demo-form-inline" >
       <el-form-item label="选择日期：">
         <el-date-picker
           v-model="datatime"
           type="date"
-          placeholder="选择日期" size="small">
+          placeholder="选择日期" size="small"
+          value-format="yyyy-MM-dd HH:mm:ss">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -30,53 +31,104 @@
       >
       </el-table-column>
       <el-table-column
-        prop="name"
-        label="总条数"
+        prop="alarmId"
+        label="告警ID"
         width="200"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="amount1"
-        label="已上报"
+        prop="uploadTime"
+        label="变更时间"
         width="200"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="amount1"
-        label="未上报"
+        prop="type"
+        label="变更类型"
         width="200"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="amount1"
-        label="未上报原因"
+        prop="status"
+        label="上报状态"
         width="240"
         align="center">
       </el-table-column>
 
 
     </el-table>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList1"
+    />
   </div>
 </template>
 
 <script>
+  import {getList,getListByTime} from "@/api/alarm/alarmApi";
   export default {
     name: 'index',
     data() {
       return {
+        loading:false,
+        dateRange:'',
+        datatime:'',
         tableData: [{
-          id: '12987122',
-          name: '王小虎',
-          amount1: '234',
-          amount2: '3.2',
-          amount3: 10
-        }]
+          type: '',
+          alarmid: '',
+          uploadtime: '',
+          status: '',
+        }],
+        queryParams: {
+          pageNum: 1,
+          pageSize: 10,
+        },
+        tableData:[],
+        total:0
       }
+    },
+    created(){
+      this.getList1();
     },
     methods: {
       onSubmit() {
-        console.log('submit!');
-      }
+        this.queryParams.pageNum = 1;
+        let that=this;
+        var uploadtime=that.datatime;
+        getListByTime(uploadtime).then(
+          response => {
+            that.tableData = response.data;
+            that.loading = false;
+          }
+        );;
+        console.log(this.datatime);
+      },
+      /**
+       * 查询告警列表
+       */
+      /*getList1(){
+        this.loading = true;
+        debugger
+        getList(this.addDateRange(this.queryParams, this.dateRange)).then((response)=>{
+          debugger
+          this.tableData = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        })
+      },*/
+      getList1() {
+        this.loading = true;
+        getList(this.addDateRange(this.queryParams, this.dateRange)).then((response) => {
+          this.tableData = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        })
+
+      },
+
     }
   }
 </script>

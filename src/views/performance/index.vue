@@ -11,7 +11,6 @@
         <today v-if="first"/>
       </el-tab-pane>
       <el-tab-pane label="批次详情" name="second" :key="'second'">
-
         <detail v-if="second"/>
       </el-tab-pane>
     </el-tabs>
@@ -27,6 +26,7 @@
     components: {detail,today},
     data(){
       return{
+        loading:false,
         datatime:'',
         formInline: {
           user: '',
@@ -37,12 +37,15 @@
         second:false,
         activeName:'first',
 
+
       }
     },
     methods: {
+
       onSubmit() {
         console.log('submit!');
       },
+
       handleClick(tab, event) {
         this.activeName = tab.name;
         if(tab.name=='first'){
