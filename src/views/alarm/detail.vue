@@ -9,7 +9,14 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="对照批次号：">
-        <el-input v-model="this.a" placeholder="请输入对照批次号" clearable size="small" style="width: 240px"  />
+        <el-select v-model="a" placeholder="请选择">
+         <el-option
+          v-for="item in batchnum1"
+          :key="item.batchnum"
+          :label="item.label"
+          :value="item.batchnum">
+        </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找</el-button>
