@@ -22,10 +22,10 @@
     </el-row>
     <el-row  style="padding: 20px 0px"><span><h4>工单处理质量</h4></span></el-row>
     <el-row>
-      <el-table>
-        <el-table-column label="工单类型"></el-table-column>
-        <el-table-column label="工单数量"></el-table-column>
-        <el-table-column label="及时率"></el-table-column>
+      <el-table :data="tableData">
+        <el-table-column label="工单类型" prop="type"></el-table-column>
+        <el-table-column label="工单数量" prop="counts"></el-table-column>
+        <el-table-column label="及时率" prop="timeliness"></el-table-column>
       </el-table>
     </el-row>
     </el-card>
@@ -33,8 +33,29 @@
 </template>
 
 <script>
-  export default {
-    name: 'index'
+    import {find} from "@/api/alarm/assessment/index";
+    export default {
+      name: 'index',
+        data() {
+            return {
+                tableData: [{
+                    type: '',
+                    counts: '',
+                    timeliness: ''
+                }]
+
+            }
+        },
+        created(){
+            this.list();
+        },
+        methods: {
+          list(){
+              find().then((response) => {
+                  this.tableData = response.data;
+              })
+          }
+        }
   }
 </script>
 
