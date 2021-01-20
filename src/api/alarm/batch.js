@@ -7,3 +7,11 @@ export function getList(query) {
     params: query
   })
 }
+export function getListBybatchnum(query) {
+  return request({
+    url:'/result/list',
+    method:'get',
+    params: query
+  })
+}
+

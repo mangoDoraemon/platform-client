@@ -9,7 +9,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="对照批次号：">
-        <el-input v-model="id" placeholder="请输入对照批次号" clearable size="small" style="width: 240px"  />
+        <el-input v-model="this.a" placeholder="请输入对照批次号" clearable size="small" style="width: 240px"  />
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找</el-button>
@@ -17,57 +17,59 @@
     </el-form>
 
     <el-table
-      :data="tableData"
-      :summary-method="getSummaries"
-      show-summary
+      :data="tableData1"
+      :span-method="objectSpanMethod"
     >
       <el-table-column
-        prop="id"
+        prop="batchnum"
         label="对照批次号"
         align="center">
       </el-table-column>
 
       <el-table-column
-        prop="name"
+        prop="modelname"
         label="模型名称"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="amount1"
+        prop="ckOne"
         label="浙江省杭州市三墩机房(pod1)参考/对照"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="amount2"
+        prop="ckTwo"
         label="浙江省杭州市三墩机房(pod2)参考/对照"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="amount3"
+        prop="ckThree"
         label="浙江省杭州市三墩机房(pod3)参考/对照"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="id"
+        prop="ckFour"
         label="浙江省杭州市三墩机房(pod4)参考/对照"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="id"
+        prop="ckFive"
         label="浙江POSS(池外)参考/对照"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="id"
+        prop="dzTwo"
         label="总计参考/对照"
         align="center">
       </el-table-column>
     </el-table>
 
-  </div>
+
+    <!--<div class="el-table__body-wrapper is-scrolling-none"><table cellspacing="0" cellpadding="0" border="0" class="el-table__body" style="width: 983px;"><colgroup><col name="el-table_8_column_53" width="168"><col name="el-table_8_column_54" width="163"><col name="el-table_8_column_55" width="163"><col name="el-table_8_column_56" width="163"><col name="el-table_8_column_57" width="163"><col name="el-table_8_column_58" width="163"></colgroup><tbody><tr class="el-table__row"><td rowspan="1" colspan="1" class="el-table_8_column_53  "><div class="cell"></div></td><td rowspan="1" colspan="1" class="el-table_8_column_54  "><div class="cell">9597/9592</div></td><td rowspan="1" colspan="1" class="el-table_8_column_55  "><div class="cell">14987/14964</div></td><td rowspan="1" colspan="1" class="el-table_8_column_56  "><div class="cell">1766/1759</div></td><td rowspan="1" colspan="1" class="el-table_8_column_57  "><div class="cell">6634/6634</div></td><td rowspan="1" colspan="1" class="el-table_8_column_58  "><div class="cell">{{this.tableData2[5]}}</div></td></tr>&lt;!&ndash;&ndash;&gt;</tbody></table>&lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;</div>
+ --> </div>
 </template>
 
 <script>
+  import {getList,getListBybatchnum,getListByCount} from "@/api/alarm/batch"
   export default {
     name: "detail",
     data(){
@@ -77,72 +79,89 @@
           user: '',
           region: ''
         },
+        loading:false,
         id:'',
         tableData1:[],
+        tableData2:[],
         tableData: [{
-          id: '12987122',
-          name: '王小虎',
-          amount1: '234',
-          amount2: '3.2',
-          amount3: 10
-        }, {
-          id: '12987123',
-          name: '王小虎',
-          amount1: '165',
-          amount2: '4.43',
-          amount3: 12
-        }, {
-          id: '12987124',
-          name: '王小虎',
-          amount1: '324',
-          amount2: '1.9',
-          amount3: 9
-        }, {
-          id: '12987125',
-          name: '王小虎',
-          amount1: '621',
-          amount2: '2.2',
-          amount3: 17
-        }, {
-          id: '12987126',
-          name: '王小虎',
-          amount1: '539',
-          amount2: '4.1',
-          amount3: 15
-        }]
+          modelname:'',
+          batchnum:'',
+          ckOne:'',
+          dzOne:'',
+          ckTwo:'',
+          dzTwo:'',
+          ckThree:'',
+           dzThree:'',
+            dzFour:'',
+            ckFive:'',
+            dzFive:'',
+            ckCounts:'',
+            dzCounts:'',
+        }],
+        queryParams: {
+          pageNum: 1,
+          pageSize: 10,
+          uploadTime:'',
+          batchnum:''
+        },
+        batchnum1:[],
+        total:10,
+        a:1,
+        arr:{}
       }
 
+    },
+    created(){
+      this.getList1();
     },
     methods: {
       onSubmit() {
         console.log('submit!');
       },
-      getSummaries(param) {
-        const { columns, data } = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '总计';
-            return;
-          }
-          const values = data.map(item => Number(item[column.property]));
-          if (!values.every(value => isNaN(value))) {
-            sums[index] = values.reduce((prev, curr) => {
-              const value = Number(curr);
-              if (!isNaN(value)) {
-                return prev + curr;
-              } else {
-                return prev;
-              }
-            }, 0);
-            sums[index] += ' 元';
-          } else {
-            sums[index] = 'N/A';
-          }
-        });
+      getList1(){
 
-        return sums;
-      }
+          var time=this.parseTime(this.datatime);
+          /*this.queryParams.uploadTime=this.parseTime(time).substring(0, (time).indexOf(" "));*/
+        this.queryParams.uploadTime='2021-01-20';
+          console.log("this.queryParams.uploadTime"+this.queryParams.uploadTime);
+          getList(this.queryParams,this.dateRange).then((response) => {
+            this.batchnum1 = response.data;
+            this.total = response.total;
+
+            for(var i=0;i<this.batchnum1.length;i++){
+              console.log("this.batchnum1[i].batchnum"+this.batchnum1[i].batchnum)
+              if(this.a<this.batchnum1[i].batchnum){
+                this.a=this.batchnum1[i].batchnum
+              }
+            }
+            console.log("aaaa"+this.a)
+            this.queryParams.batchnum=this.a;
+            getListBybatchnum(this.queryParams,this.dateRange).then((response) => {
+                this.tableData1 = response.data;
+                this.total = response.total;
+
+              });
+
+          });
+
+
+      },
+      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+        if (columnIndex === 0) {
+          if (rowIndex % 2 === 0) {
+            return {
+              rowspan: 2,
+              colspan: 1
+            };
+          } else {
+            return {
+              rowspan: 0,
+              colspan: 0
+            };
+          }
+        }
+      },
+
     }
   }
 </script>
@@ -151,5 +170,8 @@
   table {
     border-spacing: 0;
     border-collapse:separate;/* 如果值为collapse，则element表格下方会出现滚动条*/
+  }
+  table tr td:last-child{
+    background-color: #1ab394;
   }
 </style>

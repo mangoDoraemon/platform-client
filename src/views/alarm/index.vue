@@ -69,7 +69,7 @@
       return {
         loading:false,
         dateRange:'',
-        datatime:new Date().toLocaleDateString(),
+        datatime:new Date(),
         tableData: [{
         type: '',
         count: '',

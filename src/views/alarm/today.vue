@@ -78,7 +78,7 @@
           }
       },
       created(){
-          this.getList1();
+
       },
       methods: {
         onSubmit() {
