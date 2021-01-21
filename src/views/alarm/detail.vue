@@ -64,7 +64,7 @@
         align="center">
       </el-table-column>
       <el-table-column
-        prop="dzTwo"
+        prop="ckCounts"
         label="总计参考/对照"
         align="center">
       </el-table-column>
