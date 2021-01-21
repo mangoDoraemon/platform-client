@@ -5,7 +5,9 @@
         <el-date-picker
           v-model="datatime"
           type="date"
-          placeholder="选择日期" size="small">
+          placeholder="选择日期" size="small"
+          @change="getList1"
+        >
         </el-date-picker>
       </el-form-item>
       <el-form-item label="对照批次号：">
@@ -26,6 +28,7 @@
     <el-table
       :data="tableData1"
       :span-method="objectSpanMethod"
+      v-loading="loading"
     >
       <el-table-column
         prop="batchnum"
@@ -123,13 +126,15 @@
     },
     methods: {
       onSubmit() {
+        this.getList1();
         console.log('submit!');
       },
       getList1(){
-
+          this.loading=true;
           var time=this.parseTime(this.datatime);
-          /*this.queryParams.uploadTime=this.parseTime(time).substring(0, (time).indexOf(" "));*/
-        this.queryParams.uploadTime='2021-01-20';
+          if(time!=null){
+            this.queryParams.uploadTime=this.parseTime(time).substring(0, (time).indexOf(" "));
+          }
           console.log("this.queryParams.uploadTime"+this.queryParams.uploadTime);
           getList(this.queryParams,this.dateRange).then((response) => {
             this.batchnum1 = response.data;
@@ -146,9 +151,8 @@
             getListBybatchnum(this.queryParams,this.dateRange).then((response) => {
                 this.tableData1 = response.data;
                 this.total = response.total;
-
               });
-
+              this.loading=false;
           });
 
 
