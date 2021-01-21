@@ -22,6 +22,7 @@
       :data="tableData"
       style="width: 100%"
       v-loading="loading"
+
     >
       <el-table-column
         prop="type"
@@ -43,14 +44,19 @@
         prop="fail"
         label="未上报"
         align="center">
+        <template slot-scope="scope">{{scope.row.fail}} </template>
       </el-table-column>
-      <el-table-column
-        label="未上报原因"
-        align="center">
+      <el-table-column  label="未上报原因"
+                        align="center"
+                        prop="fail"
+                        v-if="showOne"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.fail>0?'API接口故障': ""}}
+        </template>
       </el-table-column>
+</el-table>
 
-
-    </el-table>
     <pagination
       v-show="total>0"
       :total="total"
@@ -81,8 +87,10 @@
           pageSize: 10,
           uploadTime:''
         },
-
-        total:0
+        case:true,
+        total:0,
+        look:"",
+        showOne:true,
       }
     },
     created(){
@@ -102,13 +110,16 @@
         this.loading = true;
 
         var time=this.parseTime(this.datatime);
-        this.queryParams.uploadTime=this.parseTime(time).substring(0, (time).indexOf(" "));
+        if(time!=null){
+          this.queryParams.uploadTime=this.parseTime(time).substring(0, (time).indexOf(" "));
+        }
         getList(this.addDateRange(this.queryParams,this.dateRange)).then((response) => {
           this.tableData = response.rows;
           this.total = response.total;
           this.getType();
           this.loading = false;
         })
+
       },
       /**
        * 解析类型
@@ -122,10 +133,15 @@
             }else {
               that.tableData[i].type='消除告警'
             }
+            if((that.tableData[i].fail)>0){
+              that.showOne=true;
+
+            }else if((that.tableData[i].fail)==0){
+
+              that.showOne=false;
+            }
           }
       },
-
-
     }
   }
 </script>

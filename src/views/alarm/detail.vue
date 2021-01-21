@@ -154,8 +154,6 @@
               });
               this.loading=false;
           });
-
-
       },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
         if (columnIndex === 0) {
