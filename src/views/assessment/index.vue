@@ -45,9 +45,9 @@
                 }],
               //已上线
               Aunched:'',
-              Au:'',
+              Au:0,
               //已分配
-              All:'',
+              All:0,
               Allocated:'',
               A:'',
               B:''
@@ -74,7 +74,6 @@
               var a=that.Aunched
               that.A=Object.values(a);
               that.Au=parseFloat(that.A.toString().substring(0,5));
-
               console.log("----"+Object.keys(a))
               console.log("Au"+typeof Au)
 
@@ -90,7 +89,6 @@
               var a=that.Allocated
               that.A=Object.values(a);
               that.All=parseFloat(that.A.toString().substring(0,5));
-
               console.log("----"+that.All)
               console.log("++++"+typeof that.All)
             })
