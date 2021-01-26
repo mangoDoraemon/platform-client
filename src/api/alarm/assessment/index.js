@@ -13,3 +13,23 @@ export function findByDate(query) {
     method:'get'
   })
 }
+
+/**
+ * 已上线
+ */
+export function getAunched() {
+  return request({
+    url:'/index/getAunched',
+    method:'get',
+  })
+}
+
+/**
+ * 已分配
+ */
+export function getAllocated() {
+  return request({
+    url:'/index/getAllocated',
+    method:'get',
+  })
+}
