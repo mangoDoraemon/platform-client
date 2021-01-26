@@ -6,8 +6,8 @@
         <div>
           <el-row slot="header" class="content-box"><span><h4>IT云资源池物理服务器CPU利用率</h4></span></el-row>
           <el-row>
-            <el-progress type="circle" :percentage="this.Au" style="padding: 20px"></el-progress>
-            <el-progress type="circle" :percentage="this.All" color="#5cb87a" style="padding: 20px;"></el-progress>
+            <el-progress type="circle" :percentage="this.Au" style="padding: 20px;white-space: pre-wrap" :format="format" ></el-progress>
+            <el-progress type="circle" :percentage="this.All" color="#5cb87a" style="padding: 20px;white-space: pre-wrap" :format="format" ></el-progress>
           </el-row>
         </div>
       </el-col>
@@ -15,7 +15,7 @@
         <div>
           <el-row slot="header" class="content-box"><span><h4>IT云资源池平台可用性</h4></span></el-row>
           <el-row>
-            <el-progress type="circle" :percentage="25"  style="padding: 20px"></el-progress>
+            <el-progress type="circle" :percentage="100"  style="padding: 20px"></el-progress>
           </el-row>
         </div>
       </el-col>
@@ -50,7 +50,9 @@
               All:0,
               Allocated:'',
               A:'',
-              B:''
+              A1:'',
+              B:'',
+              B1:''
             }
         },
         created(){
@@ -64,6 +66,14 @@
                   this.tableData = response.data;
               })
           },
+          format(percentage) {
+            if(percentage==parseFloat(this.A.toString().substring(0,5))){
+              return `${percentage}%`+'\n'+`${'已上线'}`;
+            }else if(percentage==parseFloat(this.B.toString().substring(0,5))){
+              return `${percentage}%`+'\n'+`${'已分配'}`;
+            }
+
+          },
           /**
            * 已上线
            */
@@ -73,10 +83,8 @@
               that.Aunched = response.data;
               var a=that.Aunched
               that.A=Object.values(a);
+              that.A1=Object.keys(a);
               that.Au=parseFloat(that.A.toString().substring(0,5));
-              console.log("----"+Object.keys(a))
-              console.log("Au"+typeof Au)
-
             })
           },
           /**
@@ -87,10 +95,9 @@
             getAllocated().then((response) => {
               this.Allocated = response.data;
               var a=that.Allocated
-              that.A=Object.values(a);
-              that.All=parseFloat(that.A.toString().substring(0,5));
-              console.log("----"+that.All)
-              console.log("++++"+typeof that.All)
+              that.B=Object.values(a);
+              that.B1=Object.keys(a);
+              that.All=parseFloat(that.B.toString().substring(0,5));
             })
           },
         }
