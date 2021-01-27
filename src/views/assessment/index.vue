@@ -1,21 +1,48 @@
 <template>
   <div class="app-container">
+
     <el-card>
     <el-row :gutter="140">
       <el-col :span="14">
         <div>
           <el-row slot="header" class="content-box"><span><h4>IT云资源池物理服务器CPU利用率</h4></span></el-row>
-          <el-row>
-            <el-progress type="circle" :percentage="this.Au" style="padding: 20px;white-space: pre-wrap" :format="format" ></el-progress>
-            <el-progress type="circle" :percentage="this.All" color="#5cb87a" style="padding: 20px;white-space: pre-wrap" :format="format" ></el-progress>
+          <el-row gutter="25" style=" margin-top: 10px;margin-left: 30px">
+            <el-col :span="14">
+            <radial
+              :percentNum="this.Au"
+              speed="3"
+              size="140"
+              color="#0080FF"
+              @animationFinished=""
+              backgroundColor="#A9D0F5"
+              content="已分配"/>
+            </el-col>
+            <el-col :span="10">
+            <radial
+              :percentNum="this.All"
+              speed="3"
+              size="140"
+              color="#8abf50"
+              @animationFinished=""
+              backgroundColor="#c4dfa7"
+              content="未分配"/>
+
+            </el-col>
           </el-row>
         </div>
       </el-col>
       <el-col :span="10">
         <div>
           <el-row slot="header" class="content-box"><span><h4>IT云资源池平台可用性</h4></span></el-row>
-          <el-row>
-            <el-progress type="circle" :percentage="100"  style="padding: 20px"></el-progress>
+          <el-row style="margin-top: 10px">
+            <radial
+              percentNum="100"
+              speed="3"
+              size="140"
+              color="#8abf50"
+              @animationFinished=""
+              backgroundColor="#c4dfa7"
+              content="平台可用性"/>
           </el-row>
         </div>
       </el-col>
