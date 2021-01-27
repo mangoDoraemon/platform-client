@@ -129,8 +129,7 @@
       onSubmit() {
         console.log("当前选中的批次号:"+this.queryParams.batchnum);
         debugger
-        var batchnum=this.queryParams.batchnum;
-        getListBybatchnum(batchnum).then((response) => {
+        getListBybatchnum(this.queryParams).then((response) => {
           debugger
           this.tableData1 = response.data;
           this.total = response.total;
