@@ -11,7 +11,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="对照批次号：">
-        <el-select v-model="a" placeholder="请选择">
+        <el-select v-model="queryParams.batchnum" placeholder="请选择">
          <el-option
           v-for="item in batchnum1"
           :key="item.batchnum"
@@ -123,11 +123,18 @@
     },
     created(){
       this.getList1();
+
     },
     methods: {
       onSubmit() {
-        this.getList1();
-        console.log('submit!');
+        console.log("当前选中的批次号:"+this.queryParams.batchnum);
+        debugger
+        var batchnum=this.queryParams.batchnum;
+        getListBybatchnum(batchnum).then((response) => {
+          debugger
+          this.tableData1 = response.data;
+          this.total = response.total;
+        })
       },
       getList1(){
           this.loading=true;
@@ -141,7 +148,7 @@
             this.total = response.total;
 
             for(var i=0;i<this.batchnum1.length;i++){
-              console.log("this.batchnum1[i].batchnum"+this.batchnum1[i].batchnum)
+             /* console.log("this.batchnum1[i].batchnum"+this.batchnum1[i].batchnum)*/
               if(this.a<this.batchnum1[i].batchnum){
                 this.a=this.batchnum1[i].batchnum
               }

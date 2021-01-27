@@ -20,7 +20,7 @@ export default {
     },
     type() {
       if (this.isExternal) {
-        return 'a'
+        return 'resources.js'
       }
       return 'router-link'
     }
