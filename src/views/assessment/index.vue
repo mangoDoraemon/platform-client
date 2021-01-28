@@ -6,7 +6,7 @@
       <el-col :span="14">
         <div>
           <el-row slot="header" class="content-box"><span><h4>IT云资源池物理服务器CPU利用率</h4></span></el-row>
-          <el-row gutter="25" style=" margin-top: 10px;margin-left: 30px">
+          <el-row :gutter="25" style=" margin-top: 10px;margin-left: 30px">
             <el-col :span="14">
             <radial
               :percentNum="this.Au"
