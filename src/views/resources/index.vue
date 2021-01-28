@@ -33,9 +33,9 @@
         loading:false,
         date_picker:'',
         tableData:[],
-        datatime:new Date(),
+        datatime:this.parseTime(new Date()),
         dateParam:{
-          dateTime:new Date(),
+          dateTime:this.parseTime(new Date(),'{y}-{m}-{d}'),
           dzBatch:""
         },
         time:'',
@@ -51,17 +51,6 @@
       },
       getList(){
         this.loading=true;
-       /* console.log("时间"+this.dateParam.dataTime)
-        var toTime=this.parseTime(this.dateParam.dataTime);
-        if(this.dateParam.dataTime!=null){
-          this.dateParam.dataTime=toTime.substring(0,10);
-          console.log("传参时间"+this.dateParam.dataTime)
-        }*/
-       /* var time=this.dateParam.dataTime;
-        if(time!=null){
-          this.dateParam.dataTime=time;
-          console.log("传参时间"+this.dateParam.dataTime)
-        }*/
        console.log(this.dateParam.dateTime)
         debugger
         getList(this.dateParam).then((response) => {
