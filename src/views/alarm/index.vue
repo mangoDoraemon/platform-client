@@ -108,11 +108,11 @@
        */
       getList1() {
         this.loading = true;
-
         var time=this.parseTime(this.datatime);
         if(time!=null){
           this.queryParams.uploadTime=this.parseTime(time).substring(0, (time).indexOf(" "));
         }
+        console.log(time);
         getList(this.addDateRange(this.queryParams,this.dateRange)).then((response) => {
           this.tableData = response.rows;
           this.total = response.total;

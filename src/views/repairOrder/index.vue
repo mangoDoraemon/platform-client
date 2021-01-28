@@ -9,7 +9,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找</el-button>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找1111</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="10" class="mb8">
@@ -20,43 +20,46 @@
     <el-table
       :data="tableData"
       style="width: 100%"
-      :span-method="objectSpanMethod"
+
       show-summary
     >
       <el-table-column
-        prop="id"
+        prop="workOderType"
         label="工单类型"
         width="160"
         align="center"
         >
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="operationType"
         label="操作类型"
         align="center">
+        <template slot-scope="scope" >
+          {{ scope.row.operationType=="add" ? "新增": "变更"}}
+        </template>
       </el-table-column>
       <el-table-column
-        prop="amount1"
+        prop="workOderCounts"
         label="工单总量"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="amount2"
+        prop="workOderSuccess"
         label="成功数"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="amount3"
+        prop="workOderFail"
         label="失败数"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="amount3"
+        prop="workOderNotReport"
         label="未上报"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="amount3"
+        prop="workOderReason"
         label="失败原因"
         align="center">
       </el-table-column>
@@ -68,100 +71,96 @@
       </el-col>
     </el-row>
     <el-table
-      :data="tableData"
-      style="width: 100%"
 
+      :data="tableData1"
+      style="width: 100%"
     >
       <el-table-column
-        prop="type"
+        prop="workOderType"
         label="工单类型"
         align="center"
       >
       </el-table-column>
       <el-table-column
-        prop="counts"
+        prop="workOderCounts"
         label="工单数量"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="timeliness"
+        prop="workOderSuccess"
         label="及时率"
         align="center">
       </el-table-column>
 
-
+    <!--  <el-table-column prop="workOderSuccess" label="状态" align="center">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.state==true?'success':(scope.row.state==false?'danger':'')">{{ scope.row.state==true?'连通':'未连通' }}</el-tag>
+        </template>
+      </el-table-column>-->
 
     </el-table>
   </div>
 </template>
 
 <script>
-    import {findByDate} from "@/api/alarm/assessment/index";
+    import {getList,getCount,getCountBygdType} from "@/api/alarm/WorkOder";
 
     export default {
     name: 'index',
     data(){
       return{
-        tableData: [{
-            type: '',
-            counts: '',
-            timeliness: ''
-        }],
-        datatime:new Date(),
-        dateParam:""
+        datatime:'',
+        loading:false,
+        tableData:[],
+        dateParam:{},
+        /*tableData1:[
+          workOderCounts=0,
+          workOderSuccess=0
+        ],*/
+        tableData1:[],
+        tableData2:[]
       }
     },
+      created(){
+        this.getList();
+      },
     methods:{
-      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-        if (columnIndex === 0) {
-          if (rowIndex % 2 === 0) {
-            return {
-              rowspan: 2,
-              colspan: 1
-            };
-          } else {
-            return {
-              rowspan: 0,
-              colspan: 0
-            };
+
+
+      onSubmit() {
+         /* var time=this.parseTime(this.datatime);
+          this.dateParam = this.parseTime(time).substring(0, (time).indexOf(" "));*/
+          console.log('submit!');
+
+      },
+      getList(){
+        getList().then((response) => {
+          this.tableData = response.data;
+        })
+        getCount().then((response) => {
+          this.tableData2 = response.data;
+        })
+        getCountBygdType().then((response) => {
+          this.tableData1 = response.data;
+        })
+        this.getType();
+      },
+      /**
+       * 解析类型
+       */
+      getType(){
+        let that=this;
+        var num=that.tableData.length;
+        console.log("数量"+num)
+        for(var i=0;i<num;i++){
+          if((that.tableData[i].operationType)=='add'){
+            that.tableData[i].operationType='告警'
+          }else {
+            that.tableData[i].operationType='消除告警'
           }
+
         }
       },
-      getSummaries(param) {
-        const { columns, data } = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '总价';
-            return;
-          }
-          const values = data.map(item => Number(item[column.property]));
-          if (!values.every(value => isNaN(value))) {
-            sums[index] = values.reduce((prev, curr) => {
-              const value = Number(curr);
-              if (!isNaN(value)) {
-                return prev + curr;
-              } else {
-                return prev;
-              }
-            }, 0);
-            sums[index] += ' 元';
-          } else {
-            sums[index] = 'N/A';
-          }
-        });
-
-        return sums;
-      },
-      onSubmit() {
-          var time=this.parseTime(this.datatime);
-          this.dateParam = this.parseTime(time).substring(0, (time).indexOf(" "));
-          console.log('submit!');
-          findByDate(this.dateParam).then((response) => {
-              this.tableData = response.data;
-          })
-      },
-
     }
   }
 </script>
