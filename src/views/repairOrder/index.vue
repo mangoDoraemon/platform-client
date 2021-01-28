@@ -9,7 +9,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找1111</el-button>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="10" class="mb8">
@@ -20,8 +20,7 @@
     <el-table
       :data="tableData"
       style="width: 100%"
-
-      show-summary
+      v-loading="loading"
     >
       <el-table-column
         prop="workOderType"
@@ -65,17 +64,74 @@
         <template slot-scope="scope" >
           {{ scope.row.workOderNotReport>0 ? "失败原因": ""}}
         </template>
-
       </el-table-column>
 
     </el-table>
+
+    <el-table
+      :show-header="status"
+      :data="tableData2"
+      style="width: 100%"
+      :span-method="objectSpanMethod"
+    >
+      <el-table-column
+        label="工单类型"
+        width="160"
+        align="center"
+      >
+        <template>
+          {{this.a}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="operationType"
+        label="操作类型"
+        align="center">
+        <template slot-scope="scope" >
+          {{ scope.row.operationType=="add" ? "新增": "变更"}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="workOderCounts"
+        label="工单总量"
+        align="center">
+      </el-table-column>
+      <el-table-column
+        prop="workOderSuccess"
+        label="成功数"
+        align="center">
+      </el-table-column>
+      <el-table-column
+        prop="workOderFail"
+        label="失败数"
+        align="center">
+      </el-table-column>
+      <el-table-column
+        prop="workOderNotReport"
+        label="未上报"
+        align="center">
+      </el-table-column>
+      <el-table-column
+        prop="workOderReason"
+        label="失败原因"
+        align="center">
+        <template slot-scope="scope" >
+          {{ scope.row.workOderNotReport>0 ? "失败原因": ""}}
+        </template>
+
+      </el-table-column>
+
+
+    </el-table>
+
+
+
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <span style="font-family: 微软雅黑;font-size: large;font-weight: 500;line-height: 50px" >工单处理质量</span>
       </el-col>
     </el-row>
     <el-table
-
       :data="tableData1"
       style="width: 100%"
     >
@@ -95,15 +151,9 @@
         label="及时率"
         align="center">
         <template slot-scope="scope" >
-          {{ scope.row.workOderSuccess>0 ? "": ""}}
+          {{ scope.row.workOderSuccess>0 ? Math.round(scope.row.workOderSuccess/scope.row.workOderCounts)*100.00 + "%": ""}}
         </template>
       </el-table-column>
-
-    <!--  <el-table-column prop="workOderSuccess" label="状态" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.state==true?'success':(scope.row.state==false?'danger':'')">{{ scope.row.state==true?'连通':'未连通' }}</el-tag>
-        </template>
-      </el-table-column>-->
 
     </el-table>
   </div>
@@ -116,6 +166,7 @@
     name: 'index',
     data(){
       return{
+        status:false,
         datatime:'',
         loading:false,
         tableData:[],
@@ -125,7 +176,8 @@
           workOderSuccess=0
         ],*/
         tableData1:[],
-        tableData2:[]
+        tableData2:[],
+        a:'总计'
       }
     },
       created(){
@@ -140,7 +192,25 @@
           console.log('submit!');
 
       },
+      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+        if (columnIndex === 0) {
+          if (rowIndex % 2 === 0) {
+            return {
+              rowspan: 2,
+              colspan: 1
+            };
+          } else {
+            return {
+              rowspan: 0,
+              colspan: 0
+            };
+          }
+        }
+      },
+
+
       getList(){
+        this.loading=true;
         getList().then((response) => {
           this.tableData = response.data;
         })
@@ -149,8 +219,10 @@
         })
         getCountBygdType().then((response) => {
           this.tableData1 = response.data;
+          this.loading=false
         })
         this.getType();
+
       },
       /**
        * 解析类型

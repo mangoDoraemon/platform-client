@@ -1,5 +1,46 @@
 <template>
   <div class="app-container">
+    <div>
+      <span  class="txtOne">今日批次错误个数 :</span>
+      <span>{{this.count}}</span>
+      <el-button type="text" @click="dialogVisible = true">详情</el-button>
+      <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible"
+        width="700px" append-to-body>
+        <div slot="title" class="header-title">
+          <span class="title-name" >{{ title }}</span>
+          <el-divider></el-divider>
+        </div>
+        <el-table
+          :data="tableData3"
+          v-loading="loading"
+        >
+          <el-table-column
+            prop="batchnum"
+            label="上报批次号"
+            align="center">
+          </el-table-column>
+          <el-table-column
+            prop="difference"
+            label="异常个数"
+            align="center">
+          </el-table-column>
+        </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
+          @pagination="getBatchnum"
+        />
+          <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+      </el-dialog>
+    </div>
+
     <el-form :inline="true" :model="formInline" class="demo-form-inline" >
       <el-form-item label="选择日期：" >
         <el-date-picker
@@ -79,7 +120,7 @@
 </template>
 
 <script>
-  import {getList,getListBybatchnum,getListByCount} from "@/api/alarm/batch"
+  import {getList,getListBybatchnum,getListByCount,getBatchnum,count} from "@/api/alarm/batch"
   export default {
     name: "detail",
     data(){
@@ -115,15 +156,19 @@
           batchnum:''
         },
         batchnum1:[],
-        total:10,
+        total:0,
         a:1,
-        arr:{}
+        arr:{},
+        count:120,
+        dialogVisible: false,
+        title:'异常信息',
+        tableData3:[]
       }
 
     },
     created(){
       this.getList1();
-
+      this.getBatchnum();
     },
     methods: {
       onSubmit() {
@@ -174,8 +219,25 @@
           }
         }
       },
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      },
+      getBatchnum(){
+        getBatchnum(this.queryParams,this.dateRange).then((response) => {
+          this.tableData3 = response.data;
+          this.total = response.total;
+          this.loading=false
+        })
+      }
+
 
     }
+
+
   }
 </script>
 
@@ -187,4 +249,13 @@
   table tr td:last-child{
     background-color: #1ab394;
   }
+  .txtOne{
+    color: #409EFF;
+    margin-bottom: 20px;
+  }
+  .txtTwo{
+    color: #F56C6C;
+    margin-bottom: 20px;
+  }
+
 </style>
