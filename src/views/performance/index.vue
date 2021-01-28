@@ -7,12 +7,13 @@
     </el-col>
   </el-row>
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="今日概览" name="first" :key="'first'">
-        <today v-if="first"/>
-      </el-tab-pane>
       <el-tab-pane label="批次详情" name="second" :key="'second'">
         <detail v-if="second"/>
       </el-tab-pane>
+      <el-tab-pane label="今日概览" name="first" :key="'first'">
+        <today v-if="first"/>
+      </el-tab-pane>
+
     </el-tabs>
 
 </div>
@@ -33,9 +34,9 @@
           region: ''
         },
         tableData:[],
-        first:true,
-        second:false,
-        activeName:'first',
+        first:false,
+        second:true,
+        activeName:'second',
 
 
       }

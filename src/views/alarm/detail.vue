@@ -32,7 +32,7 @@
     >
       <el-table-column
         prop="batchnum"
-        label="对照批次号"
+        label="上报批次号"
         align="center">
       </el-table-column>
 
@@ -43,32 +43,32 @@
       </el-table-column>
       <el-table-column
         prop="ckOne"
-        label="浙江省杭州市三墩机房(pod1)参考/对照"
+        label="浙江省杭州市三墩机房(pod1)应报/已报"
         align="center">
       </el-table-column>
       <el-table-column
         prop="ckTwo"
-        label="浙江省杭州市三墩机房(pod2)参考/对照"
+        label="浙江省杭州市石桥机房(pod2)应报/已报"
         align="center">
       </el-table-column>
       <el-table-column
         prop="ckThree"
-        label="浙江省杭州市三墩机房(pod3)参考/对照"
+        label="浙江省杭州市学院路机房(pod3)应报/已报"
         align="center">
       </el-table-column>
       <el-table-column
         prop="ckFour"
-        label="浙江省杭州市三墩机房(pod4)参考/对照"
+        label="浙江省杭州市三墩机房(pod4)应报/已报"
         align="center">
       </el-table-column>
       <el-table-column
         prop="ckFive"
-        label="浙江POSS(池外)参考/对照"
+        label="浙江POSS(池外)应报/已报"
         align="center">
       </el-table-column>
       <el-table-column
         prop="ckCounts"
-        label="总计参考/对照"
+        label="总计应报/已报"
         align="center">
       </el-table-column>
     </el-table>

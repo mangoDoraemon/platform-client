@@ -62,6 +62,10 @@
         prop="workOderReason"
         label="失败原因"
         align="center">
+        <template slot-scope="scope" >
+          {{ scope.row.workOderNotReport>0 ? "失败原因": ""}}
+        </template>
+
       </el-table-column>
 
     </el-table>
@@ -90,6 +94,9 @@
         prop="workOderSuccess"
         label="及时率"
         align="center">
+        <template slot-scope="scope" >
+          {{ scope.row.workOderSuccess>0 ? "": ""}}
+        </template>
       </el-table-column>
 
     <!--  <el-table-column prop="workOderSuccess" label="状态" align="center">
