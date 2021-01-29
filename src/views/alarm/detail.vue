@@ -216,12 +216,20 @@
           getList(this.queryParams,this.dateRange).then((response) => {
             this.batchnum1 = response.data;
             this.total = response.total;
-            this.queryParams.batchnum=this.batchnum1[0].batchnum;
+            debugger
+            if(this.batchnum1 !=null && this.batchnum1.length !=0){
+              this.queryParams.batchnum=this.batchnum1[0].batchnum;
+            }else {
+              this.queryParams.batchnum = ''
+            }
+
             getListBybatchnum(this.queryParams,this.dateRange).then((response) => {
                 this.tableData1 = response.data;
                 this.total = response.total;
                 this.loading = false
-              });
+              }).catch(()=>{
+              this.loading = false
+            });
           });
       },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
