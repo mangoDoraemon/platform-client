@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item label="选择日期:">
-        <el-date-picker type="date" value-format="yyyy-MM-dd"  v-model="dateParam.dateTime"  size="small" @change="getList">
+        <el-date-picker :clearable="clearable"  type="date" value-format="yyyy-MM-dd"  v-model="dateParam.dateTime"  size="small" @change="getList">
         </el-date-picker>
       </el-form-item>
     </el-form>
@@ -26,6 +26,7 @@
     name: 'index',
     data(){
       return{
+          clearable:false,
         loading:false,
         date_picker:'',
         tableData:[],

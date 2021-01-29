@@ -58,6 +58,7 @@
     <el-form :inline="true" :model="formInline" class="demo-form-inline" >
       <el-form-item label="选择日期：" >
         <el-date-picker
+          :clearable="clearable"
           v-model="datatime"
           type="date"
           placeholder="选择日期" size="small"
@@ -142,7 +143,8 @@
     name: "detail",
     data(){
       return{
-        datatime:new Date(),
+          clearable:false,
+          datatime:new Date(),
         formInline: {
           user: '',
           region: ''

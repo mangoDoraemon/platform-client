@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :inline="true"  class="demo-form-inline">
       <el-form-item label="选择日期：">
-        <el-date-picker
+        <el-date-picker :clearable="clearable"
           v-model="datatime"
           type="date"
           placeholder="选择日期" size="small">
@@ -166,7 +166,8 @@
     name: 'index',
     data(){
       return{
-        status:false,
+          clearable:false,
+          status:false,
         datatime:'',
         loading:false,
         tableData:[],
