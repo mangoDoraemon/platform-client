@@ -21,7 +21,7 @@
       <el-dialog
         title="提示"
         :visible.sync="dialogVisible"
-        width="700px" append-to-body>
+        width="800px" append-to-body>
         <div slot="title" class="header-title">
           <span class="title-name" >{{ title }}</span>
           <el-divider></el-divider>
@@ -42,15 +42,14 @@
           </el-table-column>
         </el-table>
         <pagination
-          v-show="total>0"
           :total="total"
           :page.sync="queryParams.pageNum"
           :limit.sync="queryParams.pageSize"
+          :pageSizes="[5,10]"
           @pagination="getBatchnum"
         />
           <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    <el-button @click="dialogVisible = false">关闭</el-button>
   </span>
       </el-dialog>
     </div>
@@ -168,7 +167,7 @@
         }],
         queryParams: {
           pageNum: 1,
-          pageSize: 10,
+          pageSize: 5,
           uploadTime:'',
           batchnum:''
         },
@@ -201,6 +200,12 @@
       this.getBatchnum();
       this.getCount();
     },
+    mounted(){
+     this.getTimer();
+    },
+    beforeDestroy(){
+      clearTimeout(this.getTimer())
+    },
     methods: {
 
       onSubmit() {
@@ -216,24 +221,21 @@
           if(time!=null){
             this.queryParams.uploadTime=this.parseTime(time).substring(0, (time).indexOf(" "));
           }
-          console.log("this.queryParams.uploadTime"+this.queryParams.uploadTime);
           getList(this.queryParams,this.dateRange).then((response) => {
             this.batchnum1 = response.data;
             this.total = response.total;
-
-            for(var i=0;i<this.batchnum1.length;i++){
-             /* console.log("this.batchnum1[i].batchnum"+this.batchnum1[i].batchnum)*/
-              if(this.a<this.batchnum1[i].batchnum){
-                this.a=this.batchnum1[i].batchnum
-              }
+            if(this.batchnum1 !=null && this.batchnum1.length !=0){
+              this.queryParams.batchnum=this.batchnum1[0].batchnum;
+            }else {
+              this.queryParams.batchnum = ''
             }
-            console.log("aaaa"+this.a)
-            this.queryParams.batchnum=this.a;
             getListBybatchnum(this.queryParams,this.dateRange).then((response) => {
-                this.tableData1 = response.data;
-                this.total = response.total;
-              });
-              this.loading=false;
+              this.tableData1 = response.data;
+              this.total = response.total;
+              this.loading = false
+            }).catch(()=>{
+              this.loading = false
+            });
           });
       },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
@@ -260,19 +262,30 @@
       },
       getBatchnum(){
         getBatchnumApi(this.queryParams,this.dateRange).then((response) => {
-          this.tableData3 = response.data;
+          debugger
+          this.tableData3 = response.rows;
           this.total = response.total;
           this.loading=false
         })
 
       },
       getCount(){
-        setTimeout(this.count, 1000*60*5);
-        count().then((response) => {
-          this.count1 = response.data;
-          console.log("总数为："+this.count1)
-        })
+
+          count().then((response) => {
+            this.count1 = response.data;
+            console.log("总数为："+this.count1)
+          })
+
+
       },
+
+      getTimer(){
+        return setTimeout(()=>{
+          count().then((response) => {
+            this.count1 = response.data;
+          })
+        },10000)
+      }
 
 
 

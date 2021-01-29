@@ -114,28 +114,16 @@
         if(time!=null){
           this.queryParams.uploadTime=this.parseTime(time).substring(0, (time).indexOf(" "));
         }
-        console.log(time);
         getList(this.addDateRange(this.queryParams,this.dateRange)).then((response) => {
-          this.tableData = response.rows;
-          this.getType();
+          debugger
+          this.tableData = response.data;
+          this.loading = false;
+        }).catch(()=>{
           this.loading = false;
         })
 
       },
-      /**
-       * 解析类型
-       */
-        getType(){
-          let that=this;
-          let num=that.tableData.length
-          for(var i=0;i<num;i++){
-            if((that.tableData[i].fail)>0){
-              that.showOne=true;
-            }else if((that.tableData[i].fail)==0){
-              that.showOne=false;
-            }
-          }
-      },
+
     }
   }
 </script>
