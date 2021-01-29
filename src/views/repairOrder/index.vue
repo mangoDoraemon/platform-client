@@ -211,8 +211,6 @@
           }
         }
       },
-
-
       getList(){
         this.loading=true;
         if(this.queryParams.dateTime==''){
