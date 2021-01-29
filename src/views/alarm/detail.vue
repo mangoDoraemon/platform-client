@@ -4,7 +4,7 @@
       <el-col :xs="12" :sm="12" :lg="7" class="card-panel-col">
     <div class="card-panel" >
       <div class="card-panel-icon-wrapper icon-money">
-        <svg-icon icon-class="error" class-name="card-panel-icon"  @click="dialogVisible = true" />
+        <svg-icon icon-class="error" class-name="card-panel-icon"  @click="getBatchnum" />
       </div>
       <div class="card-panel-description">
         <div class="card-panel-text">
@@ -42,10 +42,10 @@
           </el-table-column>
         </el-table>
         <pagination
+          v-if="total"
           :total="total"
           :page.sync="queryParams.pageNum"
           :limit.sync="queryParams.pageSize"
-          :pageSizes="[5,10]"
           @pagination="getBatchnum"
         />
           <span slot="footer" class="dialog-footer">
@@ -81,15 +81,21 @@
 
     <el-table
       :data="tableData1"
-      :span-method="objectSpanMethod"
       v-loading="loading"
+      :default-sort="{prop:'tableData1.sort', order:'descending'}"
     >
+      <el-table-column
+        sortable="sort"
+        prop="sort"
+        label="hah"
+        align="center">
+
+      </el-table-column>
       <el-table-column
         prop="batchnum"
         label="上报批次号"
         align="center">
       </el-table-column>
-
       <el-table-column
         prop="modelname"
         label="模型名称"
@@ -129,10 +135,7 @@
         </template>
       </el-table-column>
     </el-table>
-
-
-    <!--<div class="el-table__body-wrapper is-scrolling-none"><table cellspacing="0" cellpadding="0" border="0" class="el-table__body" style="width: 983px;"><colgroup><col name="el-table_8_column_53" width="168"><col name="el-table_8_column_54" width="163"><col name="el-table_8_column_55" width="163"><col name="el-table_8_column_56" width="163"><col name="el-table_8_column_57" width="163"><col name="el-table_8_column_58" width="163"></colgroup><tbody><tr class="el-table__row"><td rowspan="1" colspan="1" class="el-table_8_column_53  "><div class="cell"></div></td><td rowspan="1" colspan="1" class="el-table_8_column_54  "><div class="cell">9597/9592</div></td><td rowspan="1" colspan="1" class="el-table_8_column_55  "><div class="cell">14987/14964</div></td><td rowspan="1" colspan="1" class="el-table_8_column_56  "><div class="cell">1766/1759</div></td><td rowspan="1" colspan="1" class="el-table_8_column_57  "><div class="cell">6634/6634</div></td><td rowspan="1" colspan="1" class="el-table_8_column_58  "><div class="cell">{{this.tableData2[5]}}</div></td></tr>&lt;!&ndash;&ndash;&gt;</tbody></table>&lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;</div>
- --> </div>
+  </div>
 </template>
 
 <script>
@@ -150,21 +153,7 @@
         id:'',
         tableData1:[],
         tableData2:[],
-        tableData: [{
-          modelname:'',
-          batchnum:'',
-          ckOne:'',
-          dzOne:'',
-          ckTwo:'',
-          dzTwo:'',
-          ckThree:'',
-           dzThree:'',
-            dzFour:'',
-            ckFive:'',
-            dzFive:'',
-            ckCounts:'',
-            dzCounts:'',
-        }],
+
         queryParams: {
           pageNum: 1,
           pageSize: 5,
@@ -172,7 +161,7 @@
           batchnum:''
         },
         batchnum1:[],
-        total:0,
+        total: 0,
         a:1,
         arr:{},
         count1:0,
@@ -197,7 +186,6 @@
     },
     created(){
       this.getList1();
-      this.getBatchnum();
       this.getCount();
     },
     mounted(){
@@ -261,22 +249,20 @@
           .catch(_ => {});
       },
       getBatchnum(){
+        this.dialogVisible = true
         getBatchnumApi(this.queryParams,this.dateRange).then((response) => {
-          debugger
           this.tableData3 = response.rows;
+
           this.total = response.total;
           this.loading=false
         })
 
       },
       getCount(){
-
           count().then((response) => {
             this.count1 = response.data;
             console.log("总数为："+this.count1)
           })
-
-
       },
 
       getTimer(){

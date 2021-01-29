@@ -45,11 +45,11 @@
       label="上报失败批次"
       align="center">
     </el-table-column>
-    <el-table-column
+   <!-- <el-table-column
       prop="notReport"
       label="上报失败/未上报原因"
       align="center">
-    </el-table-column>
+    </el-table-column>-->
   </el-table>
   </div>
 </template>
@@ -86,6 +86,7 @@
           if(this.queryParams.dateTime==''){
             this.queryParams.dateTime=this.parseTime(new Date())
           }
+          debugger
           getOverViewList(this.queryParams).then((response) => {
             this.tableData = response.data;
             this.total = response.total;

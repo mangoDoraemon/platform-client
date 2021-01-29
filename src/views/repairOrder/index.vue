@@ -22,6 +22,7 @@
       :data="tableData"
       style="width: 100%"
       v-loading="loading"
+      :span-method="objectSpanMethod"
     >
       <el-table-column
         prop="workOderType"
@@ -48,24 +49,20 @@
         label="成功数"
         align="center">
       </el-table-column>
-      <el-table-column
-        prop="workOderFail"
-        label="失败数"
-        align="center">
-      </el-table-column>
+
       <el-table-column
         prop="workOderNotReport"
         label="未上报"
         align="center">
       </el-table-column>
-      <el-table-column
+      <!--<el-table-column
         prop="workOderReason"
         label="失败原因"
         align="center">
         <template slot-scope="scope" >
           {{ scope.row.workOderNotReport>0 ? "失败原因": ""}}
         </template>
-      </el-table-column>
+      </el-table-column>-->
 
     </el-table>
 
@@ -102,25 +99,13 @@
         label="成功数"
         align="center">
       </el-table-column>
-      <el-table-column
-        prop="workOderFail"
-        label="失败数"
-        align="center">
-      </el-table-column>
+
       <el-table-column
         prop="workOderNotReport"
         label="未上报"
         align="center">
       </el-table-column>
-      <el-table-column
-        prop="workOderReason"
-        label="失败原因"
-        align="center">
-        <template slot-scope="scope" >
-          {{ scope.row.workOderNotReport>0 ? "失败原因": ""}}
-        </template>
 
-      </el-table-column>
 
 
     </el-table>
@@ -187,11 +172,7 @@
         this.getList();
       },
     methods:{
-
-
       onSubmit() {
-         /* var time=this.parseTime(this.datatime);
-          this.dateParam = this.parseTime(time).substring(0, (time).indexOf(" "));*/
          this.getList();
           console.log('submit!');
 
@@ -211,6 +192,9 @@
           }
         }
       },
+      /*
+      * 获取工单列表
+      * */
       getList(){
         this.loading=true;
         if(this.queryParams.dateTime==''){

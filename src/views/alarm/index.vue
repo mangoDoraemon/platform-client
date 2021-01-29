@@ -115,7 +115,6 @@
           this.queryParams.uploadTime=this.parseTime(time).substring(0, (time).indexOf(" "));
         }
         getList(this.addDateRange(this.queryParams,this.dateRange)).then((response) => {
-          debugger
           this.tableData = response.data;
           this.loading = false;
         }).catch(()=>{
