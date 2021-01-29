@@ -1,11 +1,6 @@
 <template>
   <div class="app-container">
 
-  <el-row :gutter="10" class="mb8">
-    <el-col :span="1.5">
-      <span style="font-family: 微软雅黑;font-size: large;font-weight: 800" >性能上报</span>
-    </el-col>
-  </el-row>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="批次详情" name="second" :key="'second'">
         <detail v-if="second"/>
