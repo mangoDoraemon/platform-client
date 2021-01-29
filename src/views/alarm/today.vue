@@ -4,7 +4,8 @@
     <el-form-item label="选择日期：" >
       <el-date-picker
         :clearable="clearable"
-        v-model="datatime"
+        v-model="queryParams.dateTime"
+        value-format="yyyy-MM-dd"
         type="date"
         placeholder="选择日期" size="small">
       </el-date-picker>
@@ -20,37 +21,32 @@
 
   >
     <el-table-column
-      prop="date"
-      label=""
+      prop="modelName"
+      label="模型名称"
       align="center">
     </el-table-column>
     <el-table-column
-      prop="date"
-      label="集团上报情况"
+      prop="reportSituation"
+      label="上报情况"
       align="center">
     </el-table-column>
     <el-table-column
-      prop="date"
+      prop="totalBatch"
       label="总批次"
       align="center">
     </el-table-column>
     <el-table-column
-      prop="date"
+      prop="successfulBatches"
       label="上报成功批次"
       align="center">
     </el-table-column>
     <el-table-column
-      prop="date"
+      prop="failBatches"
       label="上报失败批次"
       align="center">
     </el-table-column>
     <el-table-column
-      prop="date"
-      label="未上报批次"
-      align="center">
-    </el-table-column>
-    <el-table-column
-      prop="date"
+      prop="notReport"
       label="上报失败/未上报原因"
       align="center">
     </el-table-column>
@@ -59,14 +55,13 @@
 </template>
 
 <script>
-  import {getList} from "@/api/alarm/batch"
+  import {getOverViewList} from "@/api/alarm/batch"
     export default {
       name: "today",
       data(){
           return{
               clearable:false,
               loading:false,
-            datatime:'',
             formInline: {
               user: '',
               region: ''
@@ -75,24 +70,26 @@
             queryParams: {
               pageNum: 1,
               pageSize: 10,
+              dateTime:''
             },
-            batchnum:[]
           }
       },
       created(){
-
+          this.getList();
       },
       methods: {
         onSubmit() {
+          this.getList();
           console.log('submit!');
         },
-        getList1(){
-          getList(this.datatime).then((response) => {
-            this.batchnum = response.data;
-            console.log("this.batchnum)"+this.batchnum)
-            this.loading = false;
+        getList(){
+          debugger
+          getOverViewList(this.queryParams).then((response) => {
+            this.tableData = response.data;
+            this.total = response.total;
+            this.loading=false
           })
-        },
+        }
       }
     }
 </script>

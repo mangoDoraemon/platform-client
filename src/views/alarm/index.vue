@@ -30,6 +30,7 @@
         label="告警类型"
         align="center"
       >
+        <template slot-scope="scope">{{scope.row.type=="add"?"告警" :"取消告警"}} </template>
       </el-table-column>
       <el-table-column
         prop="count"
@@ -69,7 +70,7 @@
 </template>
 
 <script>
-  import {getList,getListByTime} from "@/api/alarm/alarmApi";
+  import {getList} from "@/api/alarm/alarmApi";
   export default {
     name: 'index',
     data() {
@@ -103,7 +104,6 @@
         let that=this;
         that.queryParams.uploadTime=that.datatime;
         that.getList1();
-        console.log(that.queryParams.uploadTime);
       },
       /**
        * 查询告警列表
@@ -116,8 +116,7 @@
         }
         console.log(time);
         getList(this.addDateRange(this.queryParams,this.dateRange)).then((response) => {
-          this.tableData = response.data;
-          // this.total = response.total;
+          this.tableData = response.rows;
           this.getType();
           this.loading = false;
         })
@@ -128,18 +127,11 @@
        */
         getType(){
           let that=this;
-          var num=that.tableData.length;
+          let num=that.tableData.length
           for(var i=0;i<num;i++){
-            if((that.tableData[i].type)=='add'){
-              that.tableData[i].type='告警'
-            }else {
-              that.tableData[i].type='消除告警'
-            }
             if((that.tableData[i].fail)>0){
               that.showOne=true;
-
             }else if((that.tableData[i].fail)==0){
-
               that.showOne=false;
             }
           }
