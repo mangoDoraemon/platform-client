@@ -117,7 +117,7 @@
         console.log(time);
         getList(this.addDateRange(this.queryParams,this.dateRange)).then((response) => {
           this.tableData = response.rows;
-          this.getType();
+          /*this.getType();*/
           this.loading = false;
         })
 
@@ -125,7 +125,7 @@
       /**
        * 解析类型
        */
-        getType(){
+        /*getType(){
           let that=this;
           let num=that.tableData.length
           for(var i=0;i<num;i++){
@@ -135,7 +135,7 @@
               that.showOne=false;
             }
           }
-      },
+      },*/
     }
   }
 </script>

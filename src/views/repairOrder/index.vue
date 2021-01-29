@@ -3,7 +3,8 @@
     <el-form :inline="true"  class="demo-form-inline">
       <el-form-item label="选择日期：">
         <el-date-picker :clearable="clearable"
-          v-model="datatime"
+          v-model="queryParams.dateTime"
+           value-format="yyyy-MM-dd"
           type="date"
           placeholder="选择日期" size="small">
         </el-date-picker>
@@ -172,10 +173,11 @@
         loading:false,
         tableData:[],
         dateParam:{},
-        /*tableData1:[
-          workOderCounts=0,
-          workOderSuccess=0
-        ],*/
+        queryParams: {
+          pageNum: 1,
+          pageSize: 10,
+          dateTime:''
+        },
         tableData1:[],
         tableData2:[],
         a:'总计'
@@ -190,6 +192,7 @@
       onSubmit() {
          /* var time=this.parseTime(this.datatime);
           this.dateParam = this.parseTime(time).substring(0, (time).indexOf(" "));*/
+         this.getList();
           console.log('submit!');
 
       },
@@ -212,13 +215,17 @@
 
       getList(){
         this.loading=true;
-        getList().then((response) => {
+        if(this.queryParams.dateTime==''){
+          this.queryParams.dateTime=this.parseTime(new Date())
+        }
+
+        getList(this.queryParams).then((response) => {
           this.tableData = response.data;
         })
-        getCount().then((response) => {
+        getCount(this.queryParams).then((response) => {
           this.tableData2 = response.data;
         })
-        getCountBygdType().then((response) => {
+        getCountBygdType(this.queryParams).then((response) => {
           this.tableData1 = response.data;
           this.loading=false
         })

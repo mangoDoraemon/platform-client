@@ -83,7 +83,9 @@
           console.log('submit!');
         },
         getList(){
-          debugger
+          if(this.queryParams.dateTime==''){
+            this.queryParams.dateTime=this.parseTime(new Date())
+          }
           getOverViewList(this.queryParams).then((response) => {
             this.tableData = response.data;
             this.total = response.total;
