@@ -3,6 +3,7 @@
     <el-form :inline="true"  class="demo-form-inline" >
       <el-form-item label="选择日期：">
         <el-date-picker
+          :clearable="clearable"
           v-model="datatime"
           type="date"
           placeholder="选择日期" size="small"
@@ -73,7 +74,8 @@
     name: 'index',
     data() {
       return {
-        loading:false,
+          clearable:false,
+          loading:false,
         dateRange:'',
         datatime:new Date(),
         tableData: [{
@@ -114,8 +116,8 @@
         }
         console.log(time);
         getList(this.addDateRange(this.queryParams,this.dateRange)).then((response) => {
-          this.tableData = response.rows;
-          this.total = response.total;
+          this.tableData = response.data;
+          // this.total = response.total;
           this.getType();
           this.loading = false;
         })
