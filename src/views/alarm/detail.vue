@@ -132,13 +132,11 @@
       </el-table-column>
     </el-table>
 
-
-    <!--<div class="el-table__body-wrapper is-scrolling-none"><table cellspacing="0" cellpadding="0" border="0" class="el-table__body" style="width: 983px;"><colgroup><col name="el-table_8_column_53" width="168"><col name="el-table_8_column_54" width="163"><col name="el-table_8_column_55" width="163"><col name="el-table_8_column_56" width="163"><col name="el-table_8_column_57" width="163"><col name="el-table_8_column_58" width="163"></colgroup><tbody><tr class="el-table__row"><td rowspan="1" colspan="1" class="el-table_8_column_53  "><div class="cell"></div></td><td rowspan="1" colspan="1" class="el-table_8_column_54  "><div class="cell">9597/9592</div></td><td rowspan="1" colspan="1" class="el-table_8_column_55  "><div class="cell">14987/14964</div></td><td rowspan="1" colspan="1" class="el-table_8_column_56  "><div class="cell">1766/1759</div></td><td rowspan="1" colspan="1" class="el-table_8_column_57  "><div class="cell">6634/6634</div></td><td rowspan="1" colspan="1" class="el-table_8_column_58  "><div class="cell">{{this.tableData2[5]}}</div></td></tr>&lt;!&ndash;&ndash;&gt;</tbody></table>&lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;</div>
- --> </div>
+  </div>
 </template>
 
 <script>
-  import {getList,getListBybatchnum,getListByCount,getBatchnum,count} from "@/api/alarm/batch"
+  import {getList,getListBybatchnum,getListByCount,getBatchnumApi,count} from "@/api/alarm/batch"
   export default {
     name: "detail",
     data(){
@@ -152,7 +150,6 @@
         loading:false,
         id:'',
         tableData1:[],
-        tableData2:[],
         tableData: [{
           modelname:'',
           batchnum:'',
@@ -205,36 +202,26 @@
     methods: {
 
       onSubmit() {
-        console.log("当前选中的批次号:"+this.queryParams.batchnum);
         getListBybatchnum(this.queryParams).then((response) => {
           this.tableData1 = response.data;
           this.total = response.total;
         })
       },
       getList1(){
-          this.loading=true;
+          this.loading = true
           var time=this.parseTime(this.datatime);
           if(time!=null){
             this.queryParams.uploadTime=this.parseTime(time).substring(0, (time).indexOf(" "));
           }
-          console.log("this.queryParams.uploadTime"+this.queryParams.uploadTime);
           getList(this.queryParams,this.dateRange).then((response) => {
             this.batchnum1 = response.data;
             this.total = response.total;
-
-            for(var i=0;i<this.batchnum1.length;i++){
-             /* console.log("this.batchnum1[i].batchnum"+this.batchnum1[i].batchnum)*/
-              if(this.a<this.batchnum1[i].batchnum){
-                this.a=this.batchnum1[i].batchnum
-              }
-            }
-            console.log("aaaa"+this.a)
-            this.queryParams.batchnum=this.a;
+            this.queryParams.batchnum=this.batchnum1[0].batchnum;
             getListBybatchnum(this.queryParams,this.dateRange).then((response) => {
                 this.tableData1 = response.data;
                 this.total = response.total;
+                this.loading = false
               });
-              this.loading=false;
           });
       },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
@@ -260,7 +247,7 @@
           .catch(_ => {});
       },
       getBatchnum(){
-        getBatchnum(this.queryParams,this.dateRange).then((response) => {
+        getBatchnumApi(this.queryParams,this.dateRange).then((response) => {
           this.tableData3 = response.data;
           this.total = response.total;
           this.loading=false

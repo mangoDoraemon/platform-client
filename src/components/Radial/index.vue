@@ -8,7 +8,6 @@
         <div :style="{ backgroundColor: backgroundColor}" ref="rightcontent"></div>
       </div>
       <div class="content-wrap">
-        <icon :name="icon" width="28" :style="{ 'fill': color }" />
         <span class="content-number" :title="percent+'%'">{{percent}}%</span>
         <span class="content-text" :title="content">{{content}}</span>
       </div>

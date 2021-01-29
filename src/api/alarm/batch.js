@@ -14,7 +14,7 @@ export function getListBybatchnum(query) {
     params: query
   })
 }
-export function getBatchnum(query) {
+export function getBatchnumApi(query) {
   return request({
     url:'/result/getBatchnum',
     method:'get',

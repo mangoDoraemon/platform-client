@@ -60,7 +60,7 @@
 </template>
 
 <script>
-    import {find,getAunched,getAllocated} from "@/api/alarm/assessment/index";
+    import {find,getAunchedApi,getAllocatedApi} from "@/api/alarm/assessment/index";
     export default {
       name: 'index',
         data() {
@@ -93,25 +93,13 @@
                   this.tableData = response.data;
               })
           },
-          format(percentage) {
-            if(percentage==parseFloat(this.A.toString().substring(0,5))){
-              return `${percentage}%`+'\n'+`${'已上线'}`;
-            }else if(percentage==parseFloat(this.B.toString().substring(0,5))){
-              return `${percentage}%`+'\n'+`${'已分配'}`;
-            }
-
-          },
-          /**
-           * 已上线
-           */
           getAunched(){
-            let that=this;
-            getAunched().then((response) => {
-              that.Aunched = response.data;
-              var a=that.Aunched
-              that.A=Object.values(a);
-              that.A1=Object.keys(a);
-              that.Au=parseFloat(that.A.toString().substring(0,5));
+            getAunchedApi().then((response) => {
+              this.Aunched = response.data;
+              var a=this.Aunched
+              this.A=Object.values(a);
+              this.A1=Object.keys(a);
+              this.Au=parseFloat(this.A.toString().substring(0,5));
             })
           },
           /**
@@ -119,7 +107,7 @@
            */
           getAllocated(){
             let that=this;
-            getAllocated().then((response) => {
+            getAllocatedApi().then((response) => {
               this.Allocated = response.data;
               var a=that.Allocated
               that.B=Object.values(a);

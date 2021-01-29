@@ -17,7 +17,7 @@ export function findByDate(query) {
 /**
  * 已上线
  */
-export function getAunched() {
+export function getAunchedApi() {
   return request({
     url:'/index/getAunched',
     method:'get',
@@ -27,7 +27,7 @@ export function getAunched() {
 /**
  * 已分配
  */
-export function getAllocated() {
+export function getAllocatedApi() {
   return request({
     url:'/index/getAllocated',
     method:'get',
