@@ -82,15 +82,9 @@
     <el-table
       :data="tableData1"
       v-loading="loading"
-      :default-sort="{prop:'tableData1.sort', order:'descending'}"
+      row-key="id"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column
-        sortable="sort"
-        prop="sort"
-        label="hah"
-        align="center">
-
-      </el-table-column>
       <el-table-column
         prop="batchnum"
         label="上报批次号"
@@ -140,8 +134,11 @@
 
 <script>
   import {getList,getListBybatchnum,getListByCount,getBatchnum,count,getBatchnumApi } from "@/api/alarm/batch"
+  import Treeselect from "@riophae/vue-treeselect";
+  import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   export default {
     name: "detail",
+    components: { Treeselect },
     data(){
       return{
         datatime:new Date(),
@@ -199,7 +196,7 @@
       onSubmit() {
         console.log("当前选中的批次号:"+this.queryParams.batchnum);
         getListBybatchnum(this.queryParams).then((response) => {
-          this.tableData1 = response.data;
+          this.tableData1 = this.handleTree(response.data);
           this.total = response.total;
         })
       },
@@ -218,7 +215,9 @@
               this.queryParams.batchnum = ''
             }
             getListBybatchnum(this.queryParams,this.dateRange).then((response) => {
-              this.tableData1 = response.data;
+              this.tableData1 = this.handleTree(response.data);
+              console.log(this.tableData1)
+              debugger
               this.total = response.total;
               this.loading = false
             }).catch(()=>{
