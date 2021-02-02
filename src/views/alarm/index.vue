@@ -7,10 +7,11 @@
           v-model="datatime"
           type="date"
           placeholder="选择日期" size="small"
-          value-format="yyyy-MM-dd">
+          value-format="yyyy-MM-dd"
+          >
         </el-date-picker>
       </el-form-item>
-      <el-form-item>
+     <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找</el-button>
       </el-form-item>
     </el-form>
@@ -48,15 +49,7 @@
         align="center">
         <template slot-scope="scope">{{scope.row.fail}} </template>
       </el-table-column>
-      <el-table-column  label="未上报原因"
-                        align="center"
-                        prop="fail"
-                        v-if="showOne"
-      >
-        <template slot-scope="scope">
-          {{ scope.row.fail>0?'API接口故障': ""}}
-        </template>
-      </el-table-column>
+
 </el-table>
 
     <pagination
@@ -110,7 +103,7 @@
        */
       getList1() {
         this.loading = true;
-        var time=this.parseTime(this.datatime);
+        let time=this.parseTime(this.datatime);
         if(time!=null){
           this.queryParams.uploadTime=this.parseTime(time).substring(0, (time).indexOf(" "));
         }
@@ -120,7 +113,6 @@
         }).catch(()=>{
           this.loading = false;
         })
-
       },
 
     }

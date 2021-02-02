@@ -25,7 +25,7 @@
               color="#8abf50"
               @animationFinished=""
               backgroundColor="#c4dfa7"
-              content="未分配"/>
+              content="已上线"/>
 
             </el-col>
           </el-row>
@@ -52,7 +52,8 @@
       <el-table :data="tableData">
         <el-table-column label="工单类型" prop="type"></el-table-column>
         <el-table-column label="工单数量" prop="counts"></el-table-column>
-        <el-table-column label="及时率" prop="timeliness"></el-table-column>
+        <el-table-column label="及时率" prop="timeliness">
+        </el-table-column>
       </el-table>
     </el-row>
     </el-card>
@@ -86,12 +87,21 @@
             this.list();
             this.getAllocated();
             this.getAunched();
+
         },
         methods: {
-          list(){
-              find().then((response) => {
-                  this.tableData = response.data;
-              })
+          list: function () {
+            find().then((response) => {
+              this.tableData = response.data;
+              console.log("tableData"+Object.keys(this.tableData).length)
+              let num=Object.keys(this.tableData).length
+              let product;
+              debugger
+               for(let i=0;i<num;i++){
+                  this.tableData[i].timeliness=this.tableData[i].timeliness.substring(0,6)+"%";
+                  console.log("this.tableData[i].timeliness" + this.tableData[i].timeliness)
+                }
+            })
           },
           getAunched(){
             getAunchedApi().then((response) => {
@@ -115,6 +125,10 @@
               that.All=parseFloat(that.B.toString().substring(0,5));
             })
           },
+          toPercent(n){
+            n = n || 2;
+          　　return ( Math.round( this * Math.pow( 10, n + 2 ) ) / Math.pow( 10, n ) ).toFixed( n ) + '%';
+          }
         }
   }
 </script>

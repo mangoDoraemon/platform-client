@@ -6,7 +6,7 @@
           v-model="queryParams.dateTime"
            value-format="yyyy-MM-dd"
           type="date"
-          placeholder="选择日期" size="small">
+          placeholder="选择日期" size="small" >
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -175,7 +175,6 @@
       onSubmit() {
          this.getList();
           console.log('submit!');
-
       },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
         if (columnIndex === 0) {
@@ -198,9 +197,8 @@
       getList(){
         this.loading=true;
         if(this.queryParams.dateTime==''){
-          this.queryParams.dateTime=this.parseTime(new Date())
+          this.queryParams.dateTime=this.parseTime(new Date()).substring(0,10)
         }
-
         getList(this.queryParams).then((response) => {
           this.tableData = response.data;
         })
@@ -211,13 +209,13 @@
           this.tableData1 = response.data;
           this.loading=false
         })
-        this.getType();
+       /* this.getType();*/
 
       },
       /**
        * 解析类型
        */
-      getType(){
+      /*getType(){
         let that=this;
         var num=that.tableData.length;
         console.log("数量"+num)
@@ -229,7 +227,7 @@
           }
 
         }
-      },
+      },*/
     }
   }
 </script>

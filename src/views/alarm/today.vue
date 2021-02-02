@@ -7,19 +7,26 @@
         v-model="queryParams.dateTime"
         value-format="yyyy-MM-dd"
         type="date"
-        placeholder="选择日期" size="small">
+        placeholder="选择日期" size="small"
+      >
       </el-date-picker>
     </el-form-item>
-
     <el-form-item>
-      <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit" >查找</el-button>
+      <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找</el-button>
     </el-form-item>
   </el-form>
   <el-table
+    v-loading="loading"
     :data="tableData"
+    :default-sort="{prop:'sort', order:'ascending'}"
     style="width: 100%"
-
   >
+    <!--<el-table-column
+      sortable
+      prop="sort"
+      label="排序"
+      align="center">
+    </el-table-column>-->
     <el-table-column
       prop="modelName"
       label="模型名称"
@@ -82,17 +89,18 @@
           this.getList();
           console.log('submit!');
         },
-        getList(){
-          if(this.queryParams.dateTime==''){
-            this.queryParams.dateTime=this.parseTime(new Date())
+        getList() {
+          this.loading = true;
+          if (this.queryParams.dateTime == '') {
+            this.queryParams.dateTime = this.parseTime(new Date()).substring(0, 10)
           }
-          debugger
           getOverViewList(this.queryParams).then((response) => {
             this.tableData = response.data;
             this.total = response.total;
-            this.loading=false
+            this.loading = false
           })
-        }
+        },
+
       }
     }
 </script>
