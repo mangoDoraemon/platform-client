@@ -84,6 +84,7 @@
       v-loading="loading"
       row-key="id"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      :row-class-name="tableRowClassName"
     >
       <el-table-column
         prop="batchnum"
@@ -121,12 +122,13 @@
         align="center">
       </el-table-column>
       <el-table-column
+        prop="ckCounts"
         label="总计应报/已报"
         align="center">
-        <template slot-scope="scope">
+       <!-- <template slot-scope="scope">
           <div> <a style="color: black">{{scope.row.ckCounts.split("/")[0]}}/</a><a :style="scope.row.ckCounts | changeStyle(scope.row.ckCounts)">{{scope.row.ckCounts.split("/")[1]}}</a></div>
 
-        </template>
+        </template>-->
       </el-table-column>
     </el-table>
   </div>
@@ -270,6 +272,13 @@
             this.count1 = response.data;
           })
         },10000)
+      },
+      tableRowClassName({row,rowIndex}) {
+        if (row.ckCounts.split("/")[0]!=row.ckCounts.split("/")[1]) {
+          return 'warning-row';
+        } else{
+          return '';
+        }
       }
 
 
@@ -281,7 +290,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .panel-group {
     margin-top: -5px;
 
@@ -375,9 +384,6 @@
     border-spacing: 0;
     border-collapse:separate;/* 如果值为collapse，则element表格下方会出现滚动条*/
   }
-  table tr td:last-child{
-    background-color: #1ab394;
-  }
   .txtOne{
     color: #409EFF;
     margin-bottom: 20px;
@@ -386,7 +392,9 @@
     color: #F56C6C;
     margin-bottom: 20px;
   }
-
+  .el-table .warning-row {
+    background: #f5d1d0;
+  }
 
 
 </style>

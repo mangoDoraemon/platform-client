@@ -18,15 +18,10 @@
   <el-table
     v-loading="loading"
     :data="tableData"
-    :default-sort="{prop:'sort', order:'ascending'}"
+    :default-sort="{prop:'sort', order:'descending'}"
     style="width: 100%"
+    :row-class-name="tableRowClassName"
   >
-    <!--<el-table-column
-      sortable
-      prop="sort"
-      label="排序"
-      align="center">
-    </el-table-column>-->
     <el-table-column
       prop="modelName"
       label="模型名称"
@@ -67,6 +62,7 @@
       name: "today",
       data(){
           return{
+            isExt:false,
               clearable:false,
               loading:false,
             formInline: {
@@ -100,11 +96,25 @@
             this.loading = false
           })
         },
+        tableRowClassName({row,rowIndex}) {
+          debugger
+          if (row.failBatches>0) {
+            return 'warning-row';
+          } else{
+            return '';
+          }
+        }
 
       }
     }
 </script>
 
-<style scoped>
+<style>
+  .el-table .warning-row {
+    background: #f5d1d0;
+  }
 
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
 </style>

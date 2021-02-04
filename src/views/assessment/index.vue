@@ -93,10 +93,7 @@
           list: function () {
             find().then((response) => {
               this.tableData = response.data;
-              console.log("tableData"+Object.keys(this.tableData).length)
               let num=Object.keys(this.tableData).length
-              let product;
-              debugger
                for(let i=0;i<num;i++){
                   this.tableData[i].timeliness=this.tableData[i].timeliness.substring(0,6)+"%";
                   console.log("this.tableData[i].timeliness" + this.tableData[i].timeliness)

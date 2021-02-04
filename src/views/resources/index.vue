@@ -9,11 +9,14 @@
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData"  v-loading="loading" row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-
+    <el-table :data="tableData"  v-loading="loading"
+              row-key="id"
+              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+              :row-class-name="tableRowClassName">
       <el-table-column prop="dzBatch" label="上报批次号"></el-table-column>
       <el-table-column prop="dzName" label="对照稽查名称"></el-table-column>
-      <el-table-column prop="allResult" label="应报/已报结果"></el-table-column>
+      <el-table-column prop="allResult" label="应报/已报结果">
+      </el-table-column>
       <el-table-column prop="pod1" label="浙江省杭州市三墩机房(pod1)"></el-table-column>
       <el-table-column prop="pod2" label="浙江省杭州市石桥机房(pod2)"></el-table-column>
       <el-table-column prop="pod3" label="浙江省杭州市学院路机房(pod3)"></el-table-column>
@@ -62,12 +65,29 @@
           this.loading=false;
         }).catch(()=>{
           this.loading=false;
+          this.$message({
+            message: '警告哦，数据返回出错',
+            type: 'warning'
+          });
         })
+      },
+      tableRowClassName({row,rowIndex}) {
+        if (row.allResult.split("/")[0]!=row.allResult.split("/")[1]) {
+          return 'warning-row';
+        } else{
+          return '';
+        }
       }
     }
   }
 </script>
 
-<style scoped>
+<style>
+  .el-table .warning-row {
+    background: oldlace;
+  }
 
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
 </style>
