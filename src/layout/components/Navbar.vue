@@ -3,6 +3,9 @@
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
     <breadcrumb class="breadcrumb-container" />
+    <el-row>
+      <el-button  size="mini"style=" position: absolute;right: 100px;top: 12px;background-color: #20b28c;color: white" @click="clearSession()">退出登录</el-button>
+    </el-row>
 
     <div v-show="false" class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
@@ -35,11 +38,19 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-
+import {removeToken} from "../../utils/auth";
+import {clear} from "@/api/alarm/exit"
 export default {
   components: {
     Breadcrumb,
     Hamburger
+  },
+  data () {
+    return {
+      radio: '1',
+      exit:true,
+      have:''
+    };
   },
   computed: {
     ...mapGetters([
@@ -51,6 +62,13 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
+    clearSession(){
+      removeToken();
+      clear().then(() => {
+          this.have='被清除'
+        window.location.href="/login";
+      })
+    }
   }
 }
 </script>
@@ -125,6 +143,12 @@ export default {
           cursor: pointer;
           position: absolute;
           right: -20px;
+          top: 25px;
+          font-size: 12px;
+        }
+        el-button{
+          position: absolute;
+          left: -20px;
           top: 25px;
           font-size: 12px;
         }

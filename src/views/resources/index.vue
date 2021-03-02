@@ -65,10 +65,14 @@
           this.loading=false;
         }).catch(()=>{
           this.loading=false;
-          this.$message({
-            message: '警告哦，数据返回出错',
-            type: 'warning'
-          });
+            console.log("跳到登陆界面");
+          if(this.dateParam.dateTime>this.parseTime(new Date(),'{y}-{m}-{d}')){
+            this.$message({
+              message: '请选择正确的时间范围',
+              type: 'warning'
+            });
+          }
+
         })
       },
       tableRowClassName({row,rowIndex}) {
@@ -84,10 +88,6 @@
 
 <style>
   .el-table .warning-row {
-    background: oldlace;
-  }
-
-  .el-table .success-row {
-    background: #f0f9eb;
+    background: #f5dcdd;
   }
 </style>

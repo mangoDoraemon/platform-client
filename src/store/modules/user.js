@@ -35,7 +35,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ userName: userName.trim(), passWord: passWord }).then(response => {
 
-        debugger
+       /* debugger*/
         commit('SET_TOKEN', response.token)
         commit('SET_NAME', response.userName)
         setToken(response.token)

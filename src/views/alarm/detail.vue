@@ -219,7 +219,6 @@
             getListBybatchnum(this.queryParams,this.dateRange).then((response) => {
               this.tableData1 = this.handleTree(response.data);
               console.log(this.tableData1)
-              debugger
               this.total = response.total;
               this.loading = false
             }).catch(()=>{
@@ -280,9 +279,6 @@
           return '';
         }
       }
-
-
-
 
     }
 
@@ -393,7 +389,7 @@
     margin-bottom: 20px;
   }
   .el-table .warning-row {
-    background: #f5d1d0;
+    background: #f5dcdd;
   }
 
 

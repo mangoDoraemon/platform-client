@@ -4,6 +4,7 @@ import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
+import {removeToken} from "./utils/auth";
 import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
@@ -20,7 +21,7 @@ router.beforeEach(async(to, from, next) => {
   // determine whether the user has logged in
   const hasToken = getToken()
   /*debugger*/
-  console.log("有没有"+hasToken)
+  console.log("有"+hasToken)
   if (hasToken && hasToken !="undefined") {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
@@ -55,6 +56,9 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     }
   }
+  const timerOne=window.setTimeout(function(){
+    removeToken();
+  },1800010);
 })
 
 router.afterEach(() => {

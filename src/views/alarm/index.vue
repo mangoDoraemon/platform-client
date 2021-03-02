@@ -64,6 +64,7 @@
 
 <script>
   import {getList} from "@/api/alarm/alarmApi";
+  import { getToken } from '@/utils/auth';
   export default {
     name: 'index',
     data() {
@@ -87,6 +88,7 @@
         total:0,
         look:"",
         showOne:true,
+        token:''
       }
     },
     created(){
