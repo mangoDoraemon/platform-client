@@ -76,6 +76,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找</el-button>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="dw">导出</el-button>
       </el-form-item>
     </el-form>
 
@@ -194,6 +195,14 @@
       clearTimeout(this.getTimer())
     },
     methods: {
+      dw(){
+        const dateTime = this.parseTime(this.datatime,'{y}-{m}-{d}')
+        const batchnum = this.queryParams.batchnum
+
+        const url = "http://localhost:9090/export/download?dateTime="+dateTime+"&batchnum="+batchnum
+        console.log(url)
+        window.location.href= url
+      },
 
       onSubmit() {
         console.log("当前选中的批次号:"+this.queryParams.batchnum);

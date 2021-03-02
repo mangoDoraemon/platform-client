@@ -7,6 +7,8 @@
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找</el-button>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="dw">导出</el-button>
+        <a href="localhost:9090/export/download">download</a>
       </el-form-item>
     </el-form>
     <el-table :data="tableData"  v-loading="loading"
@@ -27,12 +29,13 @@
 </template>
 
 <script>
-  import {getList} from "@/api/alarm/ResourceApi"
+  import {getList,exportExcel,downloadFile,download} from "@/api/alarm/ResourceApi"
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   export default {
     name: 'index',
     components: { Treeselect },
+
     data(){
       return{
         clearable:false,
@@ -54,6 +57,23 @@
     methods:{
       onSubmit(){
         this.getList();
+      },
+      onExport(){
+
+          //this.response = response.getOutput;
+          //console.log(response);
+          download().then((response) => {
+            downloadFile(response,"xxx","xlsx")
+          })
+          //window.open(response.getOutput);
+      },
+      dw(){
+        /*download()
+*/
+         const dateTime = this.dateParam.dateTime
+         const url = "http://localhost:9090/export/download"
+         console.log(url)
+         window.location.href= url
       },
       getList(){
         this.loading=true;

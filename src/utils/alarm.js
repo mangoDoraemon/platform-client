@@ -91,7 +91,7 @@ export function handleTree(data, id, parentId, children, rootId) {
     return father[parentId] === rootId;
   });
 
-  debugger
+
   return treeData != '' ? treeData : data;
 
 }
