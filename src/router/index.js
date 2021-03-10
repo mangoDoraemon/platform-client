@@ -107,6 +107,17 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/resourcesContrast',
+    component: Layout,
+    children: [{
+      path: 'resourcesContrast',
+      name: 'ResourcesContrast',
+      component: () => import('@/views/resourcesContrast/index'),
+      meta: { title: '资源对比', icon: 'dashboard' }
+    }]
+  },
+
 
 
 

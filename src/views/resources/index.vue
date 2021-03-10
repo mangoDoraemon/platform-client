@@ -7,8 +7,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找</el-button>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="dw">导出</el-button>
-        <a href="localhost:9090/export/download">download</a>
+<!--        <el-button type="cyan" icon="el-icon-search" size="mini" @click="dw">导出</el-button>-->
       </el-form-item>
     </el-form>
     <el-table :data="tableData"  v-loading="loading"

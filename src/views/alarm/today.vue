@@ -97,7 +97,6 @@
           })
         },
         tableRowClassName({row,rowIndex}) {
-          debugger
           if (row.failBatches>0) {
             return 'warning-row';
           } else{

@@ -33,3 +33,13 @@ export function getAllocatedApi() {
     method:'get',
   })
 }
+
+/**
+ *统计云纳管各部分上报异常数
+ */
+export function getCountApi() {
+  return request({
+    url:'/index/getCount',
+    method:'get'
+  })
+}

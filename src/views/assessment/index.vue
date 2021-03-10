@@ -56,12 +56,74 @@
         </el-table-column>
       </el-table>
     </el-row>
+      <el-row  style="padding: 20px 0px"><span><h4>概览查看</h4></span></el-row>
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div  class="border">
+            <el-row>
+              <el-col :span="10">
+            <svg-icon iconClass="server" class="icon" ></svg-icon>
+            </el-col>
+              <el-col :span="14" class="child">
+                <span >资源上报异常</span>
+                <br><br>
+                <span  style="color: red">{{this.countData.resourceCount}}</span>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+          <el-col :span="6">
+            <div  class="border">
+              <el-row>
+            <el-col :span="10">
+              <svg-icon iconClass="server" class="icon" ></svg-icon>
+            </el-col>
+            <el-col :span="14" class="child">
+              <span >性能上报异常</span>
+              <br><br>
+              <span  style="color: red">{{this.countData.performanceCount}}</span>
+            </el-col>
+              </el-row>
+            </div>
+          </el-col>
+            <el-col :span="6">
+              <div  class="border">
+                <el-row>
+                <el-col :span="10">
+                <svg-icon iconClass="server" class="icon" ></svg-icon>
+              </el-col>
+              <el-col :span="14" class="child">
+                <span >工单上报异常</span>
+                <br><br>
+                <span  style="color: red">{{this.countData.orderCount}}</span>
+              </el-col>
+                  </el-row>
+              </div>
+            </el-col>
+              <el-col :span="6">
+                <div  class="border">
+                  <el-row>
+                <el-col :span="10">
+                  <svg-icon iconClass="server" class="icon" ></svg-icon>
+                </el-col>
+                <el-col :span="14" class="child">
+                  <span >告警上报异常</span>
+                  <br><br>
+                  <span  style="color: red">{{this.countData.alarmCount}}</span>
+                </el-col>
+                  </el-row>
+                </div>
+              </el-col>
+<!--        <el-col :span="6"><div class="border">性能上报异常</div></el-col>-->
+<!--        <el-col :span="6"><div class="border">工单上报异常</div></el-col>-->
+<!--        <el-col :span="6"><div class="border">告警上报异常</div></el-col>-->
+      </el-row>
     </el-card>
   </div>
 </template>
 
 <script>
-    import {find,getAunchedApi,getAllocatedApi} from "@/api/alarm/assessment/index";
+    import {find,getAunchedApi,getAllocatedApi,getCountApi} from "@/api/alarm/assessment/index";
     export default {
       name: 'index',
         data() {
@@ -80,16 +142,24 @@
               A:'',
               A1:'',
               B:'',
-              B1:''
+              B1:'',
+              imgUrl:require("../../icons/svg/server.svg"),
+              countData:[]
             }
         },
         created(){
             this.list();
             this.getAllocated();
             this.getAunched();
-
+            this.getCount();
         },
         methods: {
+          getCount: function(){
+            getCountApi().then((response) => {
+              this.countData = response.data;
+              console.log(this.countData);
+            })
+          },
           list: function () {
             find().then((response) => {
               this.tableData = response.data;
@@ -131,6 +201,11 @@
 </script>
 
 <style scoped>
+  .icon{
+    width: 100px;
+    height: 100px;
+    margin: 40px 20px;
+  }
   .content-box{
   //margin-top: 20px;
     padding: 20px 0px;
@@ -138,5 +213,14 @@
   }
   el-progress{
     padding: 20px;
+  }
+  .border {
+    border-style:solid;
+    border-width:1px;
+    border-color:#ccc;
+  }
+  .child {
+    text-align: center;
+    margin-top: 50px;
   }
 </style>
