@@ -1,56 +1,72 @@
 <template>
   <div class="app-container">
+    <div v-if="detail">
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item label="选择日期:">
-        <el-date-picker :clearable="clearable"  type="date" value-format="yyyy-MM-dd"  v-model="dateParam.dateTime"  size="small" >
+        <el-date-picker
+          v-model="compareData.createTime"
+          type="month"
+          format="yyyyMM"
+          value-format="yyyyMM"
+          placeholder="选择月">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="onSubmit">查找</el-button>
         <el-button type="cyan" icon="el-icon-download" size="mini" @click="dialogVisible=true">导出</el-button>
-      </el-form-item>
-    </el-form>
-    <el-table :data="tableData"  v-loading="loading"
-              row-key="id"
-              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-              :row-class-name="tableRowClassName">
-      <el-table-column prop="dzName" label="模型"></el-table-column>
-      <el-table-column prop="allResult" label="1月上报数量"></el-table-column>
-      <el-table-column prop="allResult" label="2月上报数量">
-      </el-table-column>
-      <el-table-column prop="pod1" label="2月新增数量"></el-table-column>
-      <el-table-column prop="pod2" label="2月下线数量"></el-table-column>
 
-    </el-table>
-    <el-dialog
-      title="导出"
-      :visible.sync="dialogVisible"
-      width="30%"
-      :before-close="handleClose">
-      <span>选择模型
+        <el-dialog
+          title="导出"
+          :visible.sync="dialogVisible"
+          width="30%"
+          :before-close="handleClose"
+        @close="resetSelect">
+      <span>选择模型:
       <el-select v-model="selectedArray" @change="changeSelect" multiple>
 <!--        <el-option label="全选" key="1" value="全选" @click.native='selectAll'></el-option>-->
         <el-checkbox v-model="checked" @change='selectAll'>全选</el-checkbox>
         <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
+          v-for="item in tableData"
+          :key="item.modelid"
+          :label="item.content"
+          :value="item.modelid">
         </el-option>
       </el-select></span>
-      <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <span slot="footer" class="dialog-footer">
+    <el-button type="cancel" @click="resetSelect">取 消</el-button>
+    <el-button type="primary" @click="download">确 定</el-button>
   </span>
-    </el-dialog>
+        </el-dialog>
+      </el-form-item>
+    </el-form>
+
+    <el-table :data="tableData"  v-loading="loading"
+              row-key="id"
+              >
+      <el-table-column prop="content" label="模型"></el-table-column>
+      <el-table-column prop="lastmonthSbsl" :label="`${this.lastmonth}月上报数量`"></el-table-column>
+      <el-table-column prop="thismonthSbsl" :label="`${this.thismonth}月上报数量`"></el-table-column>
+      <el-table-column prop="thismonthAdd" :label="`${this.thismonth}月新增数量`"><template slot-scope="scope"><a @click="changeDetail(scope.row,'新增')" style="color:#1880FF;" v-if="scope.row.thismonthAdd>0">{{scope.row.thismonthAdd}}</a><span v-if="scope.row.thismonthAdd==0">{{scope.row.thismonthAdd}}</span></template></el-table-column>
+      <el-table-column prop="thismonthSbsl" :label="`${this.thismonth}月下线数量`"><template slot-scope="scope"><a @click="changeDetail(scope.row,'下线')" style="color:#1880FF;" v-if="scope.row.thismonthXxsl>0">{{scope.row.thismonthXxsl}}</a><span v-if="scope.row.thismonthXxsl==0">{{scope.row.thismonthXxsl}}</span></template></el-table-column>
+    </el-table>
+    </div>
+    <el-tag closable="" v-if="!detail" @close="changeDetail">已选择模型：{{this.compareDetail.content}}</el-tag>
+    <el-table v-if="!detail" :data="detailData" v-loading="loading">
+      <el-table-column prop="resid" label="资源对象ID"></el-table-column>
+      <el-table-column prop="modelid" label="模型ID"></el-table-column>
+    </el-table>
+
+
   </div>
 
 
 </template>
 
 <script>
-  import {getList,exportExcel,downloadFile,download} from "@/api/alarm/ResourceApi"
+  import {exportExcel,downloadFile} from "@/api/alarm/ResourceApi"
+  import {getList,getDetail} from "@/api/alarm/compare"
   import Treeselect from "@riophae/vue-treeselect";
+  import moment from "moment";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   export default {
     name: 'index',
@@ -58,107 +74,99 @@
 
     data(){
       return{
+        compareData:{
+          createTime:moment(moment().month(moment().month() - 1).startOf('month').valueOf()).format('YYYYMM'),
+          modelid:""
+        },
+        lastmonth:'',
+        thismonth:'',
         clearable:false,
         loading:false,
         date_picker:'',
         tableData:[],
         datatime:this.parseTime(new Date()),
         dateParam:{
-          dateTime:this.parseTime(new Date(),'{y}-{m}-{d}'),
+          dateTime:this.parseTime(new Date(),'{y}{m}'),
           dzBatch:""
         },
         time:'',
         dialogVisible:false,
-        options:[{
-          value:'2',
-          label:'物理机'
-        },{
-          value:'3',
-          label:'虚拟机'
-        },{
-          value:'4',
-          label:'交换机'
-        }],
+        // options:[{
+        //   value:'2',
+        //   label:'物理机'
+        // },{
+        //   value:'3',
+        //   label:'虚拟机'
+        // },{
+        //   value:'4',
+        //   label:'交换机'
+        // }],
         selectedArray:[],
-        checked:false
+        checked:false,
+        detail: true,
+        detailData:[],
+        compareDetail:{
+          modelids:[],
+          des:"",
+          createTime:"",
+          content:""
+        },
+        selected:"",
       }
     },
     created(){
       this.getList();
+      //this.getDetail();
     },
     methods:{
-      // changeSelect(val) {
-      //   if (val.includes('全选') && val.length < this.options.length+1) {
-      //     if(val.length<=2){
-      //       this.selectedArray=[]
-      //       this.selectedArray.unshift('全选')
-      //     this.options.map((item) => {
-      //       this.selectedArray.push(item.value)
-      //     })
-      //     }else{
-      //       this.selectedArray = this.selectedArray.filter((item) => {
-      //         return item !== '全选'
-      //       })
-      //     }
-      //
-      //   } else if (!val.includes('全选') && val.length == this.options.length) {
-      //     this.selectedArray.unshift('全选')
-      //   }else{
-      //     this.selectedArray = this.selectedArray.filter((item) => {
-      //       return item !== '全选'
-      //     })
-      //   }
-      //
-      // },
-      // selectAll() {
-      //   if (this.selectedArray.length < this.options.length) {
-      //     this.selectedArray = []
-      //     this.options.map((item) => {
-      //       this.selectedArray.push(item.value)
-      //     })
-      //     this.selectedArray.unshift('全选')
-      //   } else {
-      //     this.selectedArray = []
-      //   }
-      // },
-      // changeSelect(val) {
-      //   if (!val.includes('全选') && val.length === this.options.length) {
-      //     this.selectedArray.unshift('全选')
-      //   } else if (val.includes('全选') && (val.length - 1) < this.options.length) {
-      //     this.selectedArray = this.selectedArray.filter((item) => {
-      //       return item !== '全选'
-      //     })
-      //   }
-      // },
-
-
-
-
+      resetSelect(){
+        this.dialogVisible = false
+        this.selectedArray =[]
+        this.checked = false
+      },
+      download(){
+        if(this.selectedArray == ''){
+          this.$message({
+            message: '请选择资源类型',
+            type: 'warning'
+          })
+        }else {
+        const url = "http://localhost:9090/compare/download?createTime="+this.compareData.createTime+"&modelids="+this.selectedArray
+        console.log(this.selectedArray)
+        console.log(url)
+        window.location.href= url
+        this.dialogVisible = false
+        }
+      },
       selectAll() {
-        debugger
         this.selectedArray = []
         if (this.checked) {
-          this.options.map((item) => {
-            this.selectedArray.push(item.value)
+          this.tableData.map((item) => {
+            this.selectedArray.push(item.modelid)
           })
         } else {
           this.selectedArray = []
         }
       },
       changeSelect(val) {
-        debugger
-        if (val.length === this.options.length) {
+        if (val.length === this.tableData.length) {
           this.checked = true
         } else {
           this.checked = false
         }
       },
-      // removeTag(val) {
-      //   if (val === '全选') {
-      //     this.selectedArray = []
-      //   }
-      // },
-
+      changeDetail(var1,var2){
+        this.loading = true
+        this.detail = !this.detail
+        this.compareDetail.modelids[0] = var1.modelid
+        this.compareDetail.content = var1.content
+        this.compareDetail.des = var2
+        this.compareDetail.createTime = this.compareData.createTime
+        getDetail(this.compareDetail).then((response) =>{
+          this.detailData = response.data;
+          this.loading = false
+        })
+      },
 
       handleClose(done) {
         this.$confirm('确认关闭？')
@@ -179,43 +187,40 @@
           })
           //window.open(response.getOutput);
       },
-      dw(){
-        /*download()
-*/
-         const dateTime = this.dateParam.dateTime
-         const url = "http://localhost:9090/export/download"
-         console.log(url)
-         window.location.href= url
-      },
-      onDownload(){
-        this.display = true;
-      },
+//       dw(){
+//         /*download()
+// */
+//          const dateTime = this.dateParam.dateTime
+//          const url = "http://localhost:9090/export/download"
+//          console.log(url)
+//          window.location.href= url
+//       },
+//       onDownload(){
+//         this.dialogVisible = false
+//         console.log(this.selectedArray)
+//       },
       getList(){
-        this.loading=true;
-       console.log(this.dateParam.dateTime)
-        getList(this.dateParam).then((response) => {
-          this.tableData = this.handleTree(response.data);
-          this.dateParam.dzBatch=this.tableData.dzBatch;
-          console.log(this.dateParam.dzBatch)
+        this.loading = true;
+        getList(this.compareData).then((response) => {
+          console.log(this.compareData)
+          this.tableData = response.data;
           this.loading=false;
-        }).catch(()=>{
-          this.loading=false;
-            console.log("跳到登陆界面");
-          if(this.dateParam.dateTime>this.parseTime(new Date(),'{y}-{m}-{d}')){
-            this.$message({
-              message: '请选择正确的时间范围',
-              type: 'warning'
-            });
-          }
-
+          console.log(response)
         })
-      },
-      tableRowClassName({row,rowIndex}) {
-        if (row.allResult.split("/")[0]!=row.allResult.split("/")[1]) {
-          return 'warning-row';
-        } else{
-          return '';
+        let str = this.compareData.createTime.slice(0, 4) + "-" + this.compareData.createTime.slice(4, 6)
+        let date = new Date(str)
+        console.log(date)
+        this.lastmonth = date.getMonth()
+        if(this.lastmonth == 0){
+          this.lastmonth = 12
         }
+        this.thismonth = date.getMonth()+1
+
+      },
+      getDetail(){
+        getDetail(this.compareDetail).then((response) =>{
+          this.detailData = response.data;
+        })
       }
     }
   }

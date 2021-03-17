@@ -47,6 +47,7 @@
         </div>
       </el-col>
     </el-row>
+
     <el-row  style="padding: 20px 0px"><span><h4>工单处理质量</h4></span></el-row>
     <el-row>
       <el-table :data="tableData">
@@ -62,61 +63,58 @@
           <div  class="border">
             <el-row>
               <el-col :span="10">
-            <svg-icon iconClass="server" class="icon" ></svg-icon>
-            </el-col>
+                <svg-icon iconClass="server" class="icon" ></svg-icon>
+              </el-col>
               <el-col :span="14" class="child">
-                <span >资源上报异常</span>
+                <span>资源上报异常</span>
                 <br><br>
                 <span  style="color: red">{{this.countData.resourceCount}}</span>
               </el-col>
             </el-row>
           </div>
         </el-col>
-          <el-col :span="6">
-            <div  class="border">
-              <el-row>
-            <el-col :span="10">
-              <svg-icon iconClass="server" class="icon" ></svg-icon>
-            </el-col>
-            <el-col :span="14" class="child">
-              <span >性能上报异常</span>
-              <br><br>
-              <span  style="color: red">{{this.countData.performanceCount}}</span>
-            </el-col>
-              </el-row>
-            </div>
+        <el-col :span="6">
+          <div  class="border">
+            <el-row>
+          <el-col :span="10">
+            <svg-icon iconClass="performance" class="icon" ></svg-icon>
           </el-col>
-            <el-col :span="6">
-              <div  class="border">
-                <el-row>
-                <el-col :span="10">
-                <svg-icon iconClass="server" class="icon" ></svg-icon>
-              </el-col>
-              <el-col :span="14" class="child">
-                <span >工单上报异常</span>
-                <br><br>
-                <span  style="color: red">{{this.countData.orderCount}}</span>
-              </el-col>
-                  </el-row>
-              </div>
-            </el-col>
-              <el-col :span="6">
-                <div  class="border">
-                  <el-row>
-                <el-col :span="10">
-                  <svg-icon iconClass="server" class="icon" ></svg-icon>
-                </el-col>
-                <el-col :span="14" class="child">
-                  <span >告警上报异常</span>
-                  <br><br>
-                  <span  style="color: red">{{this.countData.alarmCount}}</span>
-                </el-col>
-                  </el-row>
-                </div>
-              </el-col>
-<!--        <el-col :span="6"><div class="border">性能上报异常</div></el-col>-->
-<!--        <el-col :span="6"><div class="border">工单上报异常</div></el-col>-->
-<!--        <el-col :span="6"><div class="border">告警上报异常</div></el-col>-->
+          <el-col :span="14" class="child">
+            <span>性能上报异常</span>
+            <br><br>
+            <span  style="color: red">{{this.countData.performanceCount}}</span>
+          </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div  class="border">
+            <el-row>
+            <el-col :span="10">
+            <svg-icon iconClass="order" class="icon" ></svg-icon>
+          </el-col>
+          <el-col :span="14" class="child">
+            工单上报异常
+            <br><br>
+            <span  style="color: red">{{this.countData.orderCount}}</span>
+          </el-col>
+              </el-row>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div  class="border">
+            <el-row>
+          <el-col :span="10">
+            <svg-icon iconClass="alarm" class="icon"></svg-icon>
+          </el-col>
+          <el-col :span="14" class="child">
+            <span>告警上报异常</span>
+            <br><br>
+            <span  style="color: red">{{this.countData.alarmCount}}</span>
+          </el-col>
+            </el-row>
+          </div>
+        </el-col>
       </el-row>
     </el-card>
   </div>
@@ -154,10 +152,9 @@
             this.getCount();
         },
         methods: {
-          getCount: function(){
-            getCountApi().then((response) => {
+           getCount(){
+             getCountApi().then((response) => {
               this.countData = response.data;
-              console.log(this.countData);
             })
           },
           list: function () {
@@ -202,9 +199,10 @@
 
 <style scoped>
   .icon{
-    width: 100px;
-    height: 100px;
-    margin: 40px 20px;
+    margin: 10%;
+    width: 80%;
+    height: 80%;
+    color: #1880FF
   }
   .content-box{
   //margin-top: 20px;
@@ -221,6 +219,6 @@
   }
   .child {
     text-align: center;
-    margin-top: 50px;
+    margin-top: 15%;
   }
 </style>
